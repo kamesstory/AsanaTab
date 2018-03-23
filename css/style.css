@@ -1,0 +1,79 @@
+@import url(https://fonts.googleapis.com/css?family=Inconsolata:400,700);
+
+* {
+  margin:0;
+  padding:0;
+  font-family: 'Inconsolata';
+  color:#333333;
+}
+
+.hide {
+  display:none;
+}
+
+a {
+  font-size: 14px;
+  padding:10px 20px 10px 20px;
+  border-width:1px;
+  border-style: solid;
+  transition-duration: 0.5s;
+  text-decoration: none;
+  color:#333333;
+}
+
+#auto-check {
+  margin-left:-4px;
+  margin-right:2px;
+}
+
+.material-icons {
+  font-size: 14px;
+  vertical-align: text-bottom; /* center icon. Don't ask my how this works because I don't know either */
+}
+
+a:hover {
+  background-color:rgba(255, 255, 255, .3);
+  transition-duration: 0.5s;
+}
+
+#text {
+  font-size:16px;
+  cursor:pointer;
+  margin-bottom:25px;
+}
+
+.copied::after {
+  content: ' - copied';
+  overflow:hidden;
+}
+
+#topcenter {
+  position:absolute;
+  width:500px;
+  left:50%;
+  top:25%;
+  text-align: center;
+  margin-left:-250px;
+  margin-top:-65px;
+}
+
+#loaderspinner {
+  position:relative;
+  width:50%;
+  text-align: center;
+  margin-top:-5%;
+}
+
+body {
+  transition-duration:1s;
+}
+
+#clock-tog {
+  padding-left:15px;
+  padding-right:15px;
+}
+
+#clock {
+  font-size:20px;
+  margin-bottom:15px;
+}
