@@ -2,9 +2,21 @@ document.addEventListener('DOMContentLoaded', function() {
     var link = document.getElementById('loaderspinner');
     // onClick's logic below:
     link.addEventListener('click', function() {
-        syncAsanaData();
+      // Test to see if the API works as intended
+      ServerManager.isLoggedIn(printIfLoggedIn());
+      // basicTextFunction();
+      // syncAsanaData();
     });
 });
+
+// Basic test function that effectively prints arbitrary text to welcometext line
+function basicTextFunction(){
+  $('#welcometext').text( "Congratulations! Some event has been triggered." );
+}
+
+function printIfLoggedIn(){
+  $('#welcometext').text( "You are succesfully logged in to your Asana!" );
+}
 
 /*
 $(document).ready('DOMContentLoaded', function() {
