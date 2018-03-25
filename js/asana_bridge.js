@@ -59,6 +59,7 @@ AsanaBridge = {
    * @param options {dict?}
    *     miss_cache {Boolean} Do not check cache before requesting
    */
+
   request: function(http_method, path, params, callback, options) {
     var me = this;
     http_method = http_method.toUpperCase();
@@ -66,6 +67,7 @@ AsanaBridge = {
     // If we're not the server page, send a message to it to make the
     // API request.
     if (!me.is_server) {
+      console.log( "We are not the server page!" );
       console.info("Client API Request", http_method, path, params);
       chrome.runtime.sendMessage({
         type: "api",
@@ -108,7 +110,7 @@ AsanaBridge = {
       };
     } else {
       // GET/DELETE request, add params as URL parameters.
-      var url_params = Asana.update({ opt_client_name: client_name }, params);
+      var url_params = update({ opt_client_name: client_name }, params);
       url += "?" + $.param(url_params);
     }
 
@@ -188,12 +190,12 @@ AsanaBridge = {
       response: response,
       date: date
     };
-  }
-};
+  },
 
-Asana.update = function(to, from) {
-  for (var k in from) {
-    to[k] = from[k];
-  }
-  return to;
+  update: function(to, from) {
+	  for (var k in from) {
+	    to[k] = from[k];
+	  }
+	  return to;
+	}
 };

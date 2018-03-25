@@ -12,14 +12,14 @@
  * They are stored off in browser local storage for the extension as a
  * single serialized string, read/written all-or-nothing.
  */
-Asana.Options = {
+Options = {
 
   /**
    * @param opt_options {dict} Options to use; if unspecified will be loaded.
    * @return {String} The URL for the login page.
    */
   loginUrl: function(opt_options) {
-    var options = opt_options || Asana.Options.loadOptions();
+    var options = opt_options || Options.loadOptions();
     return 'https://' + options.asana_host_port + '/';
   },
 

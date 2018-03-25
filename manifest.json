@@ -14,14 +14,16 @@
   },
 
   "permissions": [
-    "storage"
+    "storage",
+    "cookies",
+    "http://*/*",
+    "https://*/*"
   ],
 
   "content_scripts": [
     {
-      "js": [
-        "js/main.js"
-      ]
+      "matches": ["http://www.google.com/*"],
+      "js": ["js/main.js"]
     }
   ]
 }

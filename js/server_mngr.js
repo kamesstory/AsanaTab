@@ -83,6 +83,7 @@ ServerManager = {
     var self = this;
     AsanaBridge.request("GET", "/workspaces", {},
         function(response) {
+          console.log( "" + response );
           self._makeCallback(response, callback, errback);
         }, options);
   },
@@ -187,10 +188,14 @@ ServerManager = {
     this._cacheUserPhoto(user);
   },
 
+  // WHY THE HECK IS RESPONSE UNDEFINED MOTHER OF GOD
   _makeCallback: function(response, callback, errback) {
+    console.log( "_makeCallback method has been entered." );
     if (response.errors) {
+      console.log( 'ERROR on _makeCallback of server_mngr.js' );
       (errback || this.onError).call(null, response);
     } else {
+      printForUser( "SUCCESS on _MakeCallback of server_mngr.js" );
       callback(response.data);
     }
   },
