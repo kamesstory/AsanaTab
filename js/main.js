@@ -78,6 +78,8 @@ function onCheckLogin( is_logged_in ){
     printForUser( "You are succesfully logged in to your Asana!" );
     console.log( "Successful login or login check to Asana." );
 
+    ServerManager.logEvent({ name: "ChromeExtension-New-Tab" });
+
     retrieveWorkspaces( tab.url, tab.title, '', tab.favIconUrl );
   }
   else {
