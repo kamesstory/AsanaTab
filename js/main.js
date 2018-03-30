@@ -25,6 +25,7 @@ var is_first_add = true;
 var workspaces = null;
 var users = null;
 var user_id = null;
+var tasks = null;
 
 // Typeahead ui element
 var typeahead = null;
@@ -105,8 +106,29 @@ function retrieveWorkspaces( url, title, selected_text, favicon_url ){
     ServerManager.workspaces( function(workspaces){
       me.workspaces = workspaces;
       console.log( "Workplaces successfully retrieved: " + workspaces );
+
+      displayTasks();
     });
   });
+}
+
+// “https://app.asana.com/api/1.0/tasks?assignee=me&completed_since=now&limit=100&workspace=[workspace_id]23”
+function displayTasks(){
+  var me = this;
+  me.tasks = [];
+
+  for( let w of me.workspaces ){
+    ServerManager.tasks( w.id, function(tasks) {
+      me.tasks.push( tasks );
+      console.log( "Tasks for workspace " + w.id + " successfully retrieved: " + tasks );
+      
+      // TODO: Display the tasks on a todo list
+      $('#temp_list').append( "<b>Workspace " + w.id + "</b>" );
+      for( let t of tasks ){
+        $('#temp_list').append( "<li>" + t.name + "</li>" );
+      }
+    });
+  }
 }
 
 // Takes in a string input and outputs it in the welcome text

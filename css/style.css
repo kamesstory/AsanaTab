@@ -74,6 +74,13 @@ a:hover {
   margin-top:-5%;
 }
 
+#workspaces_container {
+  position:absolute;
+  width:50%;
+  text-align: center;
+  margin-top:-5%;
+}
+
 body {
   transition-duration:1s;
 }

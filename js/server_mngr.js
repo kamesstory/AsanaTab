@@ -89,6 +89,27 @@ ServerManager = {
   },
 
   /**
+   * Requests the set of tasks assigned to the logged-in user from a single workspace
+   *
+   * @param callback {Function(workspaces)} Callback on success.
+   *     workspaces {dict[]}
+   */
+  tasks: function( workspace_id, callback, errback, options) {
+    var self = this;
+    var params = {
+      assignee: "me",
+      completed_since: "now",
+      limit: 100,
+      workspace: workspace_id
+    }; // assignee=me&completed_since=now&limit=100&workspace=[workspace_id]
+    AsanaBridge.request("GET", "/tasks", params,
+        function(response) {
+          console.log( "" + response );
+          self._makeCallback(response, callback, errback);
+        }, options);
+  },
+
+  /**
    * Requests the set of users in a workspace.
    *
    * @param callback {Function(users)} Callback on success.
