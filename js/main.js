@@ -80,7 +80,7 @@ function onCheckLogin( is_logged_in ){
 
     ServerManager.logEvent({ name: "ChromeExtension-New-Tab" });
 
-    retrieveWorkspaces( tab.url, tab.title, '', tab.favIconUrl );
+    retrieveWorkspaces( "chrome://newtab/", 'new tab - Asana', '', '' );
   }
   else {
     // The user is not even logged in. Prompt them to do so!

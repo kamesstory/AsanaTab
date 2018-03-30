@@ -1,4 +1,15 @@
 {
+  "background": {
+    "persistent": true,
+    "scripts": [
+      "js/jquery-3.3.1.min.js",
+      "js/asana_bridge.js",
+      "js/server_mngr.js",
+      "js/options.js",
+      "js/main.js"
+    ]
+  },
+  
   "manifest_version": 2,
   "name": "Asana Tab",
   "version": "1.0",
@@ -7,6 +18,9 @@
     "newtab": "index.html"
   },
 
+  "content_security_policy": "script-src 'self'; object-src 'self'",
+  "description": "Quickly view Asana tasks from the new tab page.",
+
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
@@ -14,8 +28,14 @@
   },
 
   "permissions": [
+    "background",
+    "tabs",
     "storage",
     "cookies",
+    "activeTab",
+    "webRequest",
+    "webRequestBlocking",
+    "*://*.asana.com/*",
     "http://*/*",
     "https://*/*"
   ],

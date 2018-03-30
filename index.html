@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>new tab - Asana</title>
+    <title id='tabtitle'>new tab - Asana</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/css?family=Cardo' rel='stylesheet'>
@@ -23,7 +23,10 @@
 			<p id='errormessage'></p>
       <p id='fillermessage'>
       	To-do: Figure out what the default Asana extension is sending the server as compared to our extension.
+        Also, check Asana workspace ID. Our app says it's 0, the official one is 498346170860
       </p>
+      <br>
+      <h3>BIG NEWS: ExtensionServer contains an onMessage listener that receives the request from API. Check it out! Cuz I deleted that shit :P</h3>
 			<!--
       <p id='clock'></p>
       <p id='text' data-clipboard-target='#text'>loading...</p>
