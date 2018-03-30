@@ -70,12 +70,12 @@ $(document).ready(function() {
 
 // Basic test function that effectively prints arbitrary text to welcometext line
 function basicTextFunction(){
-  printForUser( "Congratulations! Some event has been triggered." );
+  // printForUser( "Congratulations! Some event has been triggered." );
 }
 
 function onCheckLogin( is_logged_in ){
   if( is_logged_in ){
-    printForUser( "You are succesfully logged in to your Asana!" );
+    changeWelcome( "You are succesfully logged in to your Asana!" );
     console.log( "Successful login or login check to Asana." );
 
     ServerManager.logEvent({ name: "ChromeExtension-New-Tab" });
@@ -84,7 +84,7 @@ function onCheckLogin( is_logged_in ){
   }
   else {
     // The user is not even logged in. Prompt them to do so!
-    printForUser( "There was an error logging into your Asana. Please make sure cookies are enabled." );
+    changeWelcome( "There was an error logging into your Asana. Please make sure cookies are enabled." );
     me.showLogin(
         Options.loginUrl(options),
         Options.signupUrl(options));
@@ -104,6 +104,8 @@ function retrieveWorkspaces( url, title, selected_text, favicon_url ){
 
     // WORKSPACES being implemented here
     ServerManager.workspaces( function(workspaces){
+      $('#loaderspinner').fadeOut();
+
       me.workspaces = workspaces;
       console.log( "Workplaces successfully retrieved: " + workspaces );
 
@@ -119,21 +121,31 @@ function displayTasks(){
 
   for( let w of me.workspaces ){
     ServerManager.tasks( w.id, function(tasks) {
-      me.tasks.push( tasks );
-      console.log( "Tasks for workspace " + w.id + " successfully retrieved: " + tasks );
-      
-      // TODO: Display the tasks on a todo list
-      $('#temp_list').append( "<b>Workspace " + w.id + "</b>" );
-      for( let t of tasks ){
-        $('#temp_list').append( "<li>" + t.name + "</li>" );
+      if( tasks.length == 0 ){
+        $('#temp_list').append( "<h2 class='ls'>" + w.name + "</h2>" );
+        $('#temp_list').append( "<li class='ls'><a href=\"#\">" + 'You currently have no tasks for \
+          ' + w.name + '!' + "</a></li>" );
+      } else {
+        me.tasks.push( tasks );
+        console.log( "Tasks for workspace " + w.id + " successfully retrieved: " + tasks );
+        
+        // TODO: Display the tasks on a todo list
+        $('#temp_list').append( "<h2 class='ls'>" + w.name + "</h2>" );
+        for( let t of tasks ){
+          $('#temp_list').append( "<li class='ls'><a href=\"#\">" + t.name + "</a></li>" );
+        }
       }
     });
   }
 }
 
+function changeWelcome( disp_str ){
+  $('#welcometext').text( disp_str );
+}
+
 // Takes in a string input and outputs it in the welcome text
 function printForUser( input ){
-  $('#developer_updates').text( input );
+  // $('#developer_updates').text( input );
 }
 
 // Create a new list item when clicking on the "Add" button

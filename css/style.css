@@ -11,16 +11,6 @@
   display:none;
 }
 
-a {
-  font-size: 14px;
-  padding:10px 20px 10px 20px;
-  border-width:1px;
-  border-style: solid;
-  transition-duration: 0.5s;
-  text-decoration: none;
-  color:#333333;
-}
-
 #auto-check {
   margin-left:-4px;
   margin-right:2px;
@@ -29,11 +19,6 @@ a {
 .material-icons {
   font-size: 14px;
   vertical-align: text-bottom; /* center icon. Don't ask my how this works because I don't know either */
-}
-
-a:hover {
-  background-color:rgba(255, 255, 255, .3);
-  transition-duration: 0.5s;
 }
 
 #text {
@@ -69,13 +54,6 @@ a:hover {
 
 #loaderspinner {
   position:relative;
-  width:50%;
-  text-align: center;
-  margin-top:-5%;
-}
-
-#workspaces_container {
-  position:absolute;
   width:50%;
   text-align: center;
   margin-top:-5%;
