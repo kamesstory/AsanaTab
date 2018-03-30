@@ -34,7 +34,6 @@ var tab = null;
 
 // Only executes such things when the document is ready to load
 $(document).ready(function() {
-
   var me = this;
 
   // TODO: Find way to optimize all of this so it doesn't drain so much damn memory and performance
@@ -112,7 +111,7 @@ function retrieveWorkspaces( url, title, selected_text, favicon_url ){
 
 // Takes in a string input and outputs it in the welcome text
 function printForUser( input ){
-  $('#welcometext').text( input );
+  $('#developer_updates').text( input );
 }
 
 // Create a new list item when clicking on the "Add" button

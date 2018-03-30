@@ -82,6 +82,8 @@ AsanaBridge = {
     console.info("Server API Request", http_method, path, params);
 
     // Serve from cache first.
+    // TODO: Implement cache
+    /*
     if (!options.miss_cache && http_method === "GET") {
       var data = me._readCache(path, new Date());
       if (data) {
@@ -90,6 +92,7 @@ AsanaBridge = {
         return;
       }
     }
+    */
 
     // Be polite to Asana API and tell them who we are.
     var manifest = chrome.runtime.getManifest();
@@ -110,7 +113,7 @@ AsanaBridge = {
       };
     } else {
       // GET/DELETE request, add params as URL parameters.
-      var url_params = update({ opt_client_name: client_name }, params);
+      var url_params = me.update({ opt_client_name: client_name }, params);
       url += "?" + $.param(url_params);
     }
 

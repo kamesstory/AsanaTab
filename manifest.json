@@ -4,9 +4,11 @@
     "scripts": [
       "js/jquery-3.3.1.min.js",
       "js/asana_bridge.js",
+      "js/extension_server.js",
       "js/server_mngr.js",
       "js/options.js",
-      "js/main.js"
+      "js/main.js",
+      "js/background.js"
     ]
   },
   
