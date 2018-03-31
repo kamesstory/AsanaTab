@@ -75,7 +75,7 @@ function basicTextFunction(){
 
 function onCheckLogin( is_logged_in ){
   if( is_logged_in ){
-    changeWelcome( "You are succesfully logged in to your Asana!" );
+    changeWelcome( "Please feel free to browse your workspaces and projects below." );
     console.log( "Successful login or login check to Asana." );
 
     ServerManager.logEvent({ name: "ChromeExtension-New-Tab" });
@@ -104,7 +104,8 @@ function retrieveWorkspaces( url, title, selected_text, favicon_url ){
 
     // WORKSPACES being implemented here
     ServerManager.workspaces( function(workspaces){
-      $('#loaderspinner').fadeOut();
+      // $('#loaderspinner').fadeOut();
+      $('#loaderspinner').fadeTo('medium', 0);
 
       me.workspaces = workspaces;
       console.log( "Workplaces successfully retrieved: " + workspaces );

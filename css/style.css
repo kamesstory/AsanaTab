@@ -7,26 +7,6 @@
   color:#333333;
 }
 
-.hide {
-  display:none;
-}
-
-#auto-check {
-  margin-left:-4px;
-  margin-right:2px;
-}
-
-.material-icons {
-  font-size: 14px;
-  vertical-align: text-bottom; /* center icon. Don't ask my how this works because I don't know either */
-}
-
-#text {
-  font-size:16px;
-  cursor:pointer;
-  margin-bottom:25px;
-}
-
 .title {
   font-family: 'Ubuntu';
   font-size: 22px;
@@ -37,38 +17,31 @@
   font-size: 16px;
 }
 
-.copied::after {
-  content: ' - copied';
-  overflow:hidden;
+.center {
+  margin: 0 auto;
+  margin-top: 3%;
+  width:500px;
+  text-align: center;
 }
 
-#topcenter {
-  position:absolute;
-  width:500px;
-  left:50%;
-  top:25%;
-  text-align: center;
-  margin-left:-250px;
-  margin-top:-65px;
+.workspace_container {
+  float: left;
+  clear: left;
+  width: 80%;
+  margin: 30px;
+  position: relative;
 }
 
 #loaderspinner {
-  position:relative;
-  width:50%;
+  display:block;
+  margin-left: auto;
+  margin-right: auto;
+  width:25%;
   text-align: center;
-  margin-top:-5%;
 }
 
 body {
+  background-image: url("default_background.jpg");
+  background-repeat: no-repeat;
   transition-duration:1s;
-}
-
-#clock-tog {
-  padding-left:15px;
-  padding-right:15px;
-}
-
-#clock {
-  font-size:20px;
-  margin-bottom:15px;
 }
