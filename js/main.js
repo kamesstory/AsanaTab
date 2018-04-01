@@ -104,8 +104,9 @@ function retrieveWorkspaces( url, title, selected_text, favicon_url ){
 
     // WORKSPACES being implemented here
     ServerManager.workspaces( function(workspaces){
-      // $('#loaderspinner').fadeOut();
-      $('#loaderspinner').fadeTo('medium', 0);
+      // $('#loaderspinner').fadeTo('medium', 0);
+      $('#loaderdiv').hide();
+      $('.workspace_container').show();
 
       me.workspaces = workspaces;
       console.log( "Workplaces successfully retrieved: " + workspaces );

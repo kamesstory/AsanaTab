@@ -1,0 +1,43 @@
+@import "compass/css3";
+
+h2.ls {
+  font-family: 'Ubuntu';
+  font-size: 20px;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  padding: 0;
+}
+
+ul.ls {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+li.ls {
+  font-family: 'Ubuntu';
+  font-size: 14px;
+  border-bottom: 1px solid #ccc;
+}
+
+li.ls:last-child {
+  border: none;
+}
+
+li.ls a {
+  padding:10px 20px 10px 20px;
+  text-decoration: none;
+  color: #000;
+
+  -webkit-transition: font-size 0.3s ease, background-color 0.3s ease;
+  -moz-transition: font-size 0.3s ease, background-color 0.3s ease;
+  -o-transition: font-size 0.3s ease, background-color 0.3s ease;
+  -ms-transition: font-size 0.3s ease, background-color 0.3s ease;
+  transition: font-size 0.3s ease, background-color 0.3s ease;
+  display: block;
+}
+
+li.ls a:hover {
+  /* font-size: 20px; */
+  text-shadow: 0 0 1px #FC5270;
+}

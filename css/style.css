@@ -24,19 +24,31 @@
   text-align: center;
 }
 
+#loaderdiv {
+  margin: 0 auto;
+  margin-top: 3%;
+  width:500px;
+  text-align: center;
+}
+
 .workspace_container {
   float: left;
   clear: left;
   width: 80%;
   margin: 30px;
   position: relative;
+  -webkit-animation-name: animatebottom;
+  -webkit-animation-duration: 1s;
+  animation-name: animatebottom;
+  animation-duration: 1s;
+  display: none;
 }
 
 #loaderspinner {
   display:block;
   margin-left: auto;
   margin-right: auto;
-  width:25%;
+  width:20%;
   text-align: center;
 }
 
@@ -44,4 +56,14 @@ body {
   background-image: url("default_background.jpg");
   background-repeat: no-repeat;
   transition-duration:1s;
+}
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 } 
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom { 
+  from{ bottom:-100px; opacity:0 } 
+  to{ bottom:0; opacity:1 }
 }
