@@ -7,9 +7,19 @@
   color:#333333;
 }
 
+html {
+  height: 100%;
+}
+
+::-webkit-scrollbar { 
+    display: none; 
+}
+
 .title {
   font-family: 'Ubuntu';
-  font-size: 22px;
+  font-size: 25px;
+  margin-bottom: 1%;
+  margin-top: 2%;
 }
 
 .mainbody {
@@ -18,10 +28,39 @@
 }
 
 .center {
-  margin: 0 auto;
-  margin-top: 3%;
-  width:500px;
   text-align: center;
+  height: 18.5%;
+  position: fixed;
+  z-index: 999;
+  width: 100%;
+  background-color: #FFFFFF;
+}
+
+.fixed-bg {
+    background-image: url("/rollinghills.jpg");
+    height: 100vh;
+    z-index: 1;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: static;
+}
+
+.fixed-bg .openasana_button {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    background-color: transparent;
+    border: 2px solid #FFFFFF;
+    color: white;
+    font-size: 16px;
+    padding: 12px 24px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
 }
 
 #loaderdiv {
@@ -29,11 +68,10 @@
   margin-top: 3%;
   width:500px;
   text-align: center;
+  position: relative;
 }
 
 .workspace_container {
-  float: left;
-  clear: left;
   width: 80%;
   margin: 30px;
   position: relative;
@@ -52,11 +90,7 @@
   text-align: center;
 }
 
-body {
-  background-image: url("default_background.jpg");
-  background-repeat: no-repeat;
-  transition-duration:1s;
-}
+/* -------------- ANIMATIONS -------------- */
 
 @-webkit-keyframes animatebottom {
   from { bottom:-100px; opacity:0 } 
@@ -66,4 +100,14 @@ body {
 @keyframes animatebottom { 
   from{ bottom:-100px; opacity:0 } 
   to{ bottom:0; opacity:1 }
+}
+
+@-webkit-keyframes fadeIn {
+  from { opacity:0 } 
+  to { opacity:1 }
+}
+
+@keyframes fadeIn { 
+  from{ opacity:0 } 
+  to{ opacity:1 }
 }

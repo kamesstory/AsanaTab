@@ -25,6 +25,7 @@ var is_first_add = true;
 var workspaces = null;
 var users = null;
 var user_id = null;
+var user_name = null;
 var tasks = null;
 
 // Typeahead ui element
@@ -75,7 +76,6 @@ function basicTextFunction(){
 
 function onCheckLogin( is_logged_in ){
   if( is_logged_in ){
-    changeWelcome( "Please feel free to browse your workspaces and projects below." );
     console.log( "Successful login or login check to Asana." );
 
     ServerManager.logEvent({ name: "ChromeExtension-New-Tab" });
@@ -100,7 +100,9 @@ function retrieveWorkspaces( url, title, selected_text, favicon_url ){
   me.favicon_url = favicon_url;
 
   ServerManager.me( function(user) { 
+    // changeWelcome( "Welcome, " + user.name + "! Please feel free to browse your projects below." );
     me.user_id = user.id;
+    me.user_name = user.name;
 
     // WORKSPACES being implemented here
     ServerManager.workspaces( function(workspaces){
