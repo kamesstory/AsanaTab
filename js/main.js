@@ -20,6 +20,8 @@ var has_edited_notes = false;
 var has_reassigned = false;
 var has_used_page_details = false;
 var is_first_add = true;
+var workspaces_retrieved = false;
+var wrkspbutton_clicked = false;
 
 // Data from API cached for this popup.
 var workspaces = null;
@@ -46,6 +48,13 @@ $(document).ready(function() {
   ServerManager.onError = function(response) {
     me.showError(response.errors[0].message);
   };
+
+  // This sets the click functionality for the opening button
+  $('.openasana_button').click(function(){
+    open_workspaces();
+  });
+
+  startTime();
 
   chrome.tabs.query({
     active: true,
@@ -74,13 +83,33 @@ function basicTextFunction(){
   // printForUser( "Congratulations! Some event has been triggered." );
 }
 
+function startTime() {
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  var s = today.getSeconds();
+  m = checkTime(m);
+  s = checkTime(s);
+
+  $('#main_clock').text( "" + h + ":" + m + ":" + s + "" );  
+  
+  var t = setTimeout(startTime, 500);
+}
+
+function checkTime(i) {
+  if (i < 10) {
+    i = "0" + i;
+  }  // add zero in front of numbers < 10
+  return i;
+}
+
 function onCheckLogin( is_logged_in ){
   if( is_logged_in ){
     console.log( "Successful login or login check to Asana." );
 
     ServerManager.logEvent({ name: "ChromeExtension-New-Tab" });
 
-    retrieveWorkspaces( "chrome://newtab/", 'new tab - Asana', '', '' );
+    $('.openasana_button').show();
   }
   else {
     // The user is not even logged in. Prompt them to do so!
@@ -106,16 +135,21 @@ function retrieveWorkspaces( url, title, selected_text, favicon_url ){
 
     // WORKSPACES being implemented here
     ServerManager.workspaces( function(workspaces){
-      // $('#loaderspinner').fadeTo('medium', 0);
-      $('#loaderdiv').hide();
-      $('.workspace_container').show();
-
       me.workspaces = workspaces;
       console.log( "Workplaces successfully retrieved: " + workspaces );
 
       displayTasks();
     });
   });
+}
+
+function open_workspaces(){ 
+  console.log( "Workspaces are being opened on account of button click." );
+
+  $('.openasana_button').text( 'Scroll down to see workspaces.' );
+  $('#loaderdiv').show();
+  $('.workspace_container').show();
+  retrieveWorkspaces( "chrome://newtab/", 'new tab - Asana', '', '' );
 }
 
 // “https://app.asana.com/api/1.0/tasks?assignee=me&completed_since=now&limit=100&workspace=[workspace_id]23”
