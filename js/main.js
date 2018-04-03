@@ -55,6 +55,7 @@ $(document).ready(function() {
   });
 
   startTime();
+  startDate();
 
   chrome.tabs.query({
     active: true,
@@ -88,12 +89,53 @@ function startTime() {
   var h = today.getHours();
   var m = today.getMinutes();
   var s = today.getSeconds();
+  if( h > 12 ){
+    h -= 12;
+    $('#main_clock_ampm').text( "PM" );  
+  }
+  else if ( h == 0 ){
+    h = 12;
+    $('#main_clock_ampm').text( "AM" );  
+  }
   m = checkTime(m);
   s = checkTime(s);
 
-  $('#main_clock').text( "" + h + ":" + m + ":" + s + "" );  
+  if( h > 22 && m > 55 )
+    startDate();
+
+  $('#main_clock').text( "" + h + ":" + m + ":" + s + "" ); 
   
   var t = setTimeout(startTime, 500);
+}
+
+function startDate() {
+  var today = new Date();
+  var day = "";
+  switch( today.getDay() ){
+    case 0: day = "Sunday"; break;
+    case 1: day = "Monday"; break;
+    case 2: day = "Tuesday"; break;
+    case 3: day = "Wednesday"; break;
+    case 4: day = "Thursday"; break;
+    case 5: day = "Friday"; break;
+    case 6: day = "Saturday"; break;
+  }
+  var month = "";
+  switch( today.getMonth() ){
+    case 0: month = "January"; break;
+    case 1: month = "February"; break;
+    case 2: month = "March"; break;
+    case 3: month = "April"; break;
+    case 4: month = "May"; break;
+    case 5: month = "June"; break;
+    case 6: month = "July"; break;
+    case 7: month = "August"; break;
+    case 8: month = "September"; break;
+    case 9: month = "October"; break;
+    case 10: month = "November"; break;
+    case 11: month = "December"; break;
+  }
+  $('#main_date').text( day + ", " + month + " " + today.getDate() + ", " + today.getFullYear() );
 }
 
 function checkTime(i) {
@@ -113,7 +155,7 @@ function onCheckLogin( is_logged_in ){
   }
   else {
     // The user is not even logged in. Prompt them to do so!
-    changeWelcome( "There was an error logging into your Asana. Please make sure cookies are enabled." );
+    changeWelcome( "there was an error logging into your asana. please make sure cookies are enabled." );
     me.showLogin(
         Options.loginUrl(options),
         Options.signupUrl(options));
@@ -145,8 +187,7 @@ function retrieveWorkspaces( url, title, selected_text, favicon_url ){
 
 function open_workspaces(){ 
   console.log( "Workspaces are being opened on account of button click." );
-
-  $('.openasana_button').text( 'Scroll down to see workspaces.' );
+  $('.openasana_button').text( 'Loading...' );
   $('#loaderdiv').show();
   $('.workspace_container').show();
   retrieveWorkspaces( "chrome://newtab/", 'new tab - Asana', '', '' );
@@ -156,6 +197,8 @@ function open_workspaces(){
 function displayTasks(){
   var me = this;
   me.tasks = [];
+
+  $('.openasana_button').text( 'Scroll down to see workspaces.' );
 
   for( let w of me.workspaces ){
     ServerManager.tasks( w.id, function(tasks) {

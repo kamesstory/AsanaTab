@@ -18,8 +18,8 @@ html {
 .title {
   font-family: 'Ubuntu';
   font-size: 25px;
-  margin-bottom: 1%;
-  margin-top: 2%;
+  margin-bottom: 0.85%;
+  margin-top: 1.25%;
 }
 
 .mainbody {
@@ -29,7 +29,7 @@ html {
 
 .center {
   text-align: center;
-  height: 18.5%;
+  height: 15%;
   position: fixed;
   z-index: 999;
   width: 100%;
@@ -54,12 +54,46 @@ html {
 .fixed-bg #main_clock {
   position: absolute;
   top: 47.5%;
-  left: 50%;
+  left: 48.75%;
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   background-color: transparent;
   color: white;
   font-size: 90px;
+  font-family: 'Cardo';
+  text-shadow: 0px 1px 3px black;
+  padding: 12px 24px;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.fixed-bg #main_clock_ampm {
+  position: absolute;
+  top: 50%;
+  left: 61.9%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: transparent;
+  color: white;
+  font-size: 30px;
+  font-family: 'Cardo';
+  text-shadow: 0px 1px 3px black;
+  padding: 12px 24px;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.fixed-bg #main_date {
+  position: absolute;
+  top: 57.5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: transparent;
+  color: white;
+  font-size: 20px;
   font-family: 'Cardo';
   text-shadow: 0px 1px 3px black;
   padding: 12px 24px;
