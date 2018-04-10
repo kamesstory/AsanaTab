@@ -33,15 +33,15 @@ html {
   position: fixed;
   z-index: 999;
   width: 100%;
-  background-color: #FFFFFF;
+  background:rgba(255,255,255,0.9);
 }
 
 .fixed-bg {
-  background-image: url("/unsplash.jpg");
+  background-image: url("/unsplash4.jpg");
+  background-position: bottom;
   height: 100vh;
   z-index: 1;
   background-attachment: fixed;
-  background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   -webkit-animation-name: fadeIn;
@@ -134,14 +134,21 @@ html {
   display: none;
 }
 
-.workspace_container {
+.main_container {
   width: 80%;
-  margin: 30px;
+  margin: 10%;
   position: relative;
+  background: transparent;
+}
+
+.main_container .workspace_container {
+  position: relative;
+  /*
   -webkit-animation-name: animatebottom;
   -webkit-animation-duration: 1s;
   animation-name: animatebottom;
   animation-duration: 1s;
+  */
   display: none;
 }
 
