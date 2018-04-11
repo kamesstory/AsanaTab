@@ -7,7 +7,12 @@
   color:#333333;
 }
 
-html {
+html { 
+  background: url("/unsplash4.jpg") no-repeat bottom center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
   height: 100%;
 }
 
@@ -34,21 +39,11 @@ html {
   z-index: 999;
   width: 100%;
   background:rgba(255,255,255,0.9);
+  cursor: default;
 }
 
 .fixed-bg {
-  background-image: url("/unsplash4.jpg");
-  background-position: bottom;
-  height: 100vh;
-  z-index: 1;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: cover;
-  -webkit-animation-name: fadeIn;
-  -webkit-animation-duration: 1s;
-  animation-name: fadeIn;
-  animation-duration: 1s;
-  position: static;
+  height: 75vh;
 }
 
 .fixed-bg .main_clock_div{
@@ -71,7 +66,7 @@ html {
   font-family: 'Cardo';
   text-shadow: 0px 1px 3px black;
   margin: 0.2vw;
-  cursor: pointer;
+  cursor: default;
   text-align: center;
 }
 
@@ -82,7 +77,7 @@ html {
   font-size: 30px;
   font-family: 'Cardo';
   text-shadow: 0px 1px 3px black;
-  cursor: pointer;
+  cursor: default;
   text-align: center;
 }
 
@@ -98,7 +93,7 @@ html {
   font-family: 'Cardo';
   text-shadow: 0px 1px 3px black;
   padding: 12px 24px;
-  cursor: pointer;
+  cursor: default;
   border-radius: 5px;
   text-align: center;
 }
@@ -134,22 +129,26 @@ html {
   display: none;
 }
 
-.main_container {
+#main_container {
   width: 80%;
   margin: 10%;
   position: relative;
   background: transparent;
 }
 
-.main_container .workspace_container {
+#main_container .workspace_container {
   position: relative;
-  /*
+  border-top: 1vh solid white;
+  border-left: 5vh solid white;
+  border-right: 5vh solid white;
+  border-bottom: 2vh solid white;
+  margin-top: 3vh;
+  margin-bottom: 3vh;
   -webkit-animation-name: animatebottom;
   -webkit-animation-duration: 1s;
   animation-name: animatebottom;
   animation-duration: 1s;
-  */
-  display: none;
+  background: white;
 }
 
 /* -------------- ANIMATIONS -------------- */

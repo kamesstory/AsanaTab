@@ -24,20 +24,21 @@ li.ls:last-child {
   border: none;
 }
 
-li.ls a {
+li.ls a.n {
   padding:10px 20px 10px 20px;
   text-decoration: none;
   color: #000;
-
-  -webkit-transition: font-size 0.3s ease, background-color 0.3s ease;
-  -moz-transition: font-size 0.3s ease, background-color 0.3s ease;
-  -o-transition: font-size 0.3s ease, background-color 0.3s ease;
-  -ms-transition: font-size 0.3s ease, background-color 0.3s ease;
-  transition: font-size 0.3s ease, background-color 0.3s ease;
   display: block;
 }
 
-li.ls a:hover {
-  /* font-size: 20px; */
+li.ls a.n:hover {
   text-shadow: 0 0 1px #FC5270;
+}
+
+li.ls a.newadd {
+  padding:10px 20px 10px 20px;
+  text-decoration: none;
+  color: #999;
+  display: block;
+  cursor: text;
 }

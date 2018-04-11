@@ -199,22 +199,38 @@ function displayTasks(){
   me.tasks = [];
 
   $('.openasana_button').text( 'Scroll down to see workspaces.' );
+  $('.openasana_button').prop( 'disabled', true );
+  $('.openasana_button').css('cursor','default');
 
   for( let w of me.workspaces ){
     ServerManager.tasks( w.id, function(tasks) {
+      // Creates a <div class='workspace_container'> and 
+      // <ul id='temp_list' class='ls'> to go along with it
+      var work_div = document.createElement("div");
+      work_div.className = 'workspace_container';
+
+      var unordered_list = document.createElement("UL");
+      unordered_list.id = 'temp_list' + w.id;
+      unordered_list.className = 'ls';
+
+      work_div.appendChild(unordered_list);
+      document.getElementById("main_container").appendChild(work_div);
+
+      $('#temp_list' + w.id).append( "<h2 class='ls'>" + w.name + "</h2>" );
+
       if( tasks.length == 0 ){
-        $('#temp_list').append( "<h2 class='ls'>" + w.name + "</h2>" );
-        $('#temp_list').append( "<li class='ls'><a href=\"#\">" + 'You currently have no tasks for \
-          ' + w.name + '!' + "</a></li>" );
+        $('#temp_list' + w.id).append( "<li class='ls'><a class='newadd' href=\"#/\">" + 
+          'You currently have no tasks for ' + w.name + '!' + "</a></li>" );
       } else {
         me.tasks.push( tasks );
         console.log( "Tasks for workspace " + w.id + " successfully retrieved: " + tasks );
-        
-        // TODO: Display the tasks on a todo list
-        $('#temp_list').append( "<h2 class='ls'>" + w.name + "</h2>" );
+
         for( let t of tasks ){
-          $('#temp_list').append( "<li class='ls'><a href=\"#\">" + t.name + "</a></li>" );
+          $('#temp_list' + w.id).append( "<li class='ls'><a class='n' href=\"#/\">" + 
+            t.name + "</a></li>" );
         }
+        $('#temp_list' + w.id).append( "<li class='ls'><a class='newadd' href=\"#/\">" + "Type here to \
+          add a new task." + "</a></li>" );
       }
     });
   }
