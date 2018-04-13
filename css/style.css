@@ -48,7 +48,7 @@ html {
 
 .fixed-bg .main_clock_div{
   position: absolute;
-  top: 47.5%;
+  top: 46.5%;
   left: 51%;
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
@@ -83,7 +83,7 @@ html {
 
 .fixed-bg #main_date {
   position: absolute;
-  top: 57.5%;
+  top: 56%;
   left: 50%;
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
@@ -100,7 +100,7 @@ html {
 
 .fixed-bg .openasana_button {
   position: absolute;
-  top: 74%;
+  top: 75%;
   left: 50%;
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);

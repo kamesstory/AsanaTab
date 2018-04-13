@@ -178,11 +178,16 @@ function retrieveWorkspaces( url, title, selected_text, favicon_url ){
     // WORKSPACES being implemented here
     ServerManager.workspaces( function(workspaces){
       me.workspaces = workspaces;
-      console.log( "Workplaces successfully retrieved: " + workspaces );
+      me.workspaces.sort( compareWorkspaces );
+      console.log( "Workplaces successfully retrieved: " + me.workspaces.map(a => a.name) );
 
       displayTasks();
     });
   });
+}
+
+function compareWorkspaces(a, b){
+  return a.name.localeCompare(b.name);
 }
 
 function open_workspaces(){ 
@@ -196,41 +201,42 @@ function open_workspaces(){
 // “https://app.asana.com/api/1.0/tasks?assignee=me&completed_since=now&limit=100&workspace=[workspace_id]23”
 function displayTasks(){
   var me = this;
-  me.tasks = [];
+  me.tasks = {};
 
   $('.openasana_button').text( 'Scroll down to see workspaces.' );
   $('.openasana_button').prop( 'disabled', true );
   $('.openasana_button').css('cursor','default');
 
   for( let w of me.workspaces ){
+    console.log( "The workspace " + w.name + " has been called for." );
+    // Creates a <div class='workspace_container'> and 
+    // <ul id='temp_list' class='ls'> to go along with it
+    var work_div = document.createElement("div");
+    work_div.className = 'workspace_container';
+
+    var unordered_list = document.createElement("UL");
+    unordered_list.id = 'temp_list' + w.id;
+    unordered_list.className = 'ls';
+
+    work_div.appendChild(unordered_list);
+    document.getElementById("main_container").appendChild(work_div);
+
     ServerManager.tasks( w.id, function(tasks) {
-      // Creates a <div class='workspace_container'> and 
-      // <ul id='temp_list' class='ls'> to go along with it
-      var work_div = document.createElement("div");
-      work_div.className = 'workspace_container';
-
-      var unordered_list = document.createElement("UL");
-      unordered_list.id = 'temp_list' + w.id;
-      unordered_list.className = 'ls';
-
-      work_div.appendChild(unordered_list);
-      document.getElementById("main_container").appendChild(work_div);
-
       $('#temp_list' + w.id).append( "<h2 class='ls'>" + w.name + "</h2>" );
 
       if( tasks.length == 0 ){
         $('#temp_list' + w.id).append( "<li class='ls'><a class='newadd' href=\"#/\">" + 
           'You currently have no tasks for ' + w.name + '!' + "</a></li>" );
       } else {
-        me.tasks.push( tasks );
+        me.tasks[ w.id ] = tasks;
         console.log( "Tasks for workspace " + w.id + " successfully retrieved: " + tasks );
 
         for( let t of tasks ){
           $('#temp_list' + w.id).append( "<li class='ls'><a class='n' href=\"#/\">" + 
             t.name + "</a></li>" );
         }
-        $('#temp_list' + w.id).append( "<li class='ls'><a class='newadd' href=\"#/\">" + "Type here to \
-          add a new task." + "</a></li>" );
+        $('#temp_list' + w.id).append( "<li class='ls'><form><input type=\"text\" class='newadd' \
+          href=\"#/\" placeholder=\"Type here to add a new task.\"></form></li>" );
       }
     });
   }

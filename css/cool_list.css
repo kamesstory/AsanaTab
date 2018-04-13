@@ -15,8 +15,6 @@ ul.ls {
 }
 
 li.ls {
-  font-family: 'Ubuntu';
-  font-size: 14px;
   border-bottom: 1px solid #ccc;
 }
 
@@ -27,18 +25,29 @@ li.ls:last-child {
 li.ls a.n {
   padding:10px 20px 10px 20px;
   text-decoration: none;
+  font-family: 'PT Sans', serif;
+  font-size: 14px;
   color: #000;
   display: block;
 }
 
 li.ls a.n:hover {
-  text-shadow: 0 0 1px #FC5270;
+  text-shadow: 0 0 0.1px #DD3333;
 }
 
-li.ls a.newadd {
+li.ls input.newadd {
+  width: 80%;
+  border: none;
+  border-color: transparent;
+  outline: none;
   padding:10px 20px 10px 20px;
   text-decoration: none;
-  color: #999;
+  font-family: 'PT Sans', serif;
+  font-size: 14px;
   display: block;
   cursor: text;
+}
+
+li.ls input.newadd:focus {
+  text-shadow: 0 0 1px #66d;
 }
