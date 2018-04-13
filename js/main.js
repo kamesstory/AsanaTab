@@ -238,36 +238,34 @@ function displayTasks(){
           $('#ws' + w.id).append( "<li class='ls'><a class='n' href=\"#/\">" + 
             t.name + "</a></li>" );
         }
-        $('#ws' + w.id).append( "<li class='ls'><form onsubmit=\"newTask(this)\"><input type=\"text\" " + 
-          "class='newadd' href=\"#/\" placeholder=\"Type here to add a new task.\"></form></li>" );
+        $('#ws' + w.id).append( "<li class='ls'><input type=\"text\" " + 
+          "class='newadd' href=\"#/\" placeholder=\"Type here to add a new task.\"></li>" );
+        $(".newadd").on( 'change', function(){ newTask(this); });
       }
     });
   }
 }
+//<form > onsubmit=\"return newTask(this)\"/form>
 
 function newTask( element ){
-  element.preventDefault();
-  
+  var newtask = {
+    name: element.value,
+    assignee: { id: this.user_id, name: this.user_name }
+  };
+  console.log( 'newTask: element name is ' + element.value + "." );
+
+  var workspaceID = element.parentElement.parentElement.id;
+  workspaceID = workspaceID.substring( 2, workspaceID.length );
   var notifOptions = {
     type: 'basic',
     iconUrl: 'icon128.png',
     title: 'New task submission!',
-    message: 'You are submitting the following task: \"' + element.value + '\"!'
+    message: "You are submitting the following task: \"" + element.value + 
+      " to the workspace with the id " + workspaceID + "\"!"
   };
   sendNotification( 'testernotification', notifOptions, function(){} );
-
-  return false;
-
-  /*
-  var newtask = {
-    "name": element.value
-  };
-
-  var workspaceID = element.parentElement.parentElement.id;
-  workspaceID = workspaceID.substring( 2, workspaceID.length );
   console.log( "New task created in " + workspaceID );
-  ServerManager.createTask( workspaceID, newtask, displayTasks );
-  */
+  ServerManager.createTask( workspaceID, newtask, function(){} );
 }
 
 function changeWelcome( disp_str ){
