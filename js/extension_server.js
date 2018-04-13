@@ -23,6 +23,8 @@ ExtensionServer = {
             request.method, request.path, request.params, sendResponse,
             request.options || {});
         return true;  // will call sendResponse asynchronously
+      } else if( request.type === "notification" ) {
+        chrome.notifications.create( request.title, request.options, function(notificationID){} );
       }
     });
   }

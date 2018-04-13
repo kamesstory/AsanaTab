@@ -35,11 +35,18 @@
     "storage",
     "cookies",
     "activeTab",
+    "notifications",
     "webRequest",
     "webRequestBlocking",
     "*://*.asana.com/*",
     "http://*/*",
     "https://*/*"
+  ],
+
+  "web_accessible_resources": [
+    "icon16.png",
+    "icon48.png",
+    "icon128.png"
   ],
 
   "content_scripts": [

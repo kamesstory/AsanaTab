@@ -79,9 +79,12 @@ $(document).ready(function() {
   
 });
 
-// Basic test function that effectively prints arbitrary text to welcometext line
-function basicTextFunction(){
-  // printForUser( "Congratulations! Some event has been triggered." );
+function sendNotification( title, options, callback ){
+  chrome.runtime.sendMessage({
+    type: "notification",
+    title: title,
+    options: options || {}
+  }, callback);
 }
 
 function startTime() {
@@ -210,36 +213,61 @@ function displayTasks(){
   for( let w of me.workspaces ){
     console.log( "The workspace " + w.name + " has been called for." );
     // Creates a <div class='workspace_container'> and 
-    // <ul id='temp_list' class='ls'> to go along with it
+    // <ul id='ws' class='ls'> to go along with it
     var work_div = document.createElement("div");
     work_div.className = 'workspace_container';
 
     var unordered_list = document.createElement("UL");
-    unordered_list.id = 'temp_list' + w.id;
+    unordered_list.id = 'ws' + w.id;
     unordered_list.className = 'ls';
 
     work_div.appendChild(unordered_list);
     document.getElementById("main_container").appendChild(work_div);
 
     ServerManager.tasks( w.id, function(tasks) {
-      $('#temp_list' + w.id).append( "<h2 class='ls'>" + w.name + "</h2>" );
+      $('#ws' + w.id).append( "<h2 class='ls'>" + w.name + "</h2>" );
 
       if( tasks.length == 0 ){
-        $('#temp_list' + w.id).append( "<li class='ls'><a class='newadd' href=\"#/\">" + 
+        $('#ws' + w.id).append( "<li class='ls'><a class='newadd' href=\"#/\">" + 
           'You currently have no tasks for ' + w.name + '!' + "</a></li>" );
       } else {
         me.tasks[ w.id ] = tasks;
         console.log( "Tasks for workspace " + w.id + " successfully retrieved: " + tasks );
 
         for( let t of tasks ){
-          $('#temp_list' + w.id).append( "<li class='ls'><a class='n' href=\"#/\">" + 
+          $('#ws' + w.id).append( "<li class='ls'><a class='n' href=\"#/\">" + 
             t.name + "</a></li>" );
         }
-        $('#temp_list' + w.id).append( "<li class='ls'><form><input type=\"text\" class='newadd' \
-          href=\"#/\" placeholder=\"Type here to add a new task.\"></form></li>" );
+        $('#ws' + w.id).append( "<li class='ls'><form onsubmit=\"newTask(this)\"><input type=\"text\" " + 
+          "class='newadd' href=\"#/\" placeholder=\"Type here to add a new task.\"></form></li>" );
       }
     });
   }
+}
+
+function newTask( element ){
+  element.preventDefault();
+  
+  var notifOptions = {
+    type: 'basic',
+    iconUrl: 'icon128.png',
+    title: 'New task submission!',
+    message: 'You are submitting the following task: \"' + element.value + '\"!'
+  };
+  sendNotification( 'testernotification', notifOptions, function(){} );
+
+  return false;
+
+  /*
+  var newtask = {
+    "name": element.value
+  };
+
+  var workspaceID = element.parentElement.parentElement.id;
+  workspaceID = workspaceID.substring( 2, workspaceID.length );
+  console.log( "New task created in " + workspaceID );
+  ServerManager.createTask( workspaceID, newtask, displayTasks );
+  */
 }
 
 function changeWelcome( disp_str ){
@@ -250,30 +278,3 @@ function changeWelcome( disp_str ){
 function printForUser( input ){
   // $('#developer_updates').text( input );
 }
-
-// Create a new list item when clicking on the "Add" button
-/* function newElement() {
-  var li = document.createElement("li");
-  var inputValue = document.getElementById("myInput").value;
-  var t = document.createTextNode(inputValue);
-  li.appendChild(t);
-  if (inputValue === '') {
-    alert("You must write something!");
-  } else {
-    document.getElementById("myUL").appendChild(li);
-  }
-  document.getElementById("myInput").value = "";
-
-  var span = document.createElement("SPAN");
-  var txt = document.createTextNode("\u00D7");
-  span.className = "close";
-  span.appendChild(txt);
-  li.appendChild(span);
-
-  for (i = 0; i < close.length; i++) {
-    close[i].onclick = function() {
-      var div = this.parentElement;
-      div.style.display = "none";
-    }
-  }
-} */
