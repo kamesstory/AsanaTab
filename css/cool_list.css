@@ -22,6 +22,10 @@ li.ls:last-child {
   border: none;
 }
 
+li.ls:hover {
+  background: #F3F3F7;
+}
+
 li.ls a.n {
   padding:10px 20px 10px 20px;
   text-decoration: none;
@@ -31,8 +35,34 @@ li.ls a.n {
   display: block;
 }
 
-li.ls a.n:hover {
-  text-shadow: 0 0 0.1px #DD3333;
+li.ls button.donetask{
+  background: url( "/assets/checkmark.png" ) no-repeat;
+  background-size: 100%;
+  cursor: pointer;
+  border: none;
+  margin: 5px;
+  width: 27px;
+  height: 27px;
+  display: inline;
+  float: left;
+}
+
+li.ls button.donetask:hover {
+  background: url( "/assets/checkmark_filled.png" ) no-repeat;
+  background-size: 100%;
+  outline: none;
+  border-color: transparent;
+  border: none; /*
+  -webkit-animation-name: colorChange;
+  -webkit-animation-duration: 0.5s;
+  animation-name: colorChange;
+  animation-duration: 0.5s; */
+}
+
+li.ls button.donetask:focus {
+  outline: none;
+  border-color: transparent;
+  border: none;
 }
 
 li.ls input.newadd {
@@ -44,10 +74,18 @@ li.ls input.newadd {
   text-decoration: none;
   font-family: 'PT Sans', serif;
   font-size: 14px;
-  display: block;
+  display: inline;
   cursor: text;
 }
 
-li.ls input.newadd:focus {
-  text-shadow: 0 0 1px #66d;
+/* -------------- ANIMATIONS -------------- */
+
+@-webkit-keyframes colorChange {
+  from { opacity:0 } 
+  to { opacity:1 }
+}
+
+@keyframes colorChange { 
+  from{ opacity:0 } 
+  to{ opacity:1 }
 }

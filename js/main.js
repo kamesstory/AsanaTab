@@ -216,36 +216,71 @@ function displayTasks(){
     // <ul id='ws' class='ls'> to go along with it
     var work_div = document.createElement("div");
     work_div.className = 'workspace_container';
+    work_div.id = 'wsc' + w.id;
+
+    var header = document.createElement("H2");
+    var text = document.createTextNode( w.name );
+    header.className = 'ls';
+    header.appendChild( text );
 
     var unordered_list = document.createElement("UL");
     unordered_list.id = 'ws' + w.id;
     unordered_list.className = 'ls';
 
+    work_div.appendChild( header );
     work_div.appendChild(unordered_list);
     document.getElementById("main_container").appendChild(work_div);
 
-    ServerManager.tasks( w.id, function(tasks) {
-      $('#ws' + w.id).append( "<h2 class='ls'>" + w.name + "</h2>" );
-
-      if( tasks.length == 0 ){
-        $('#ws' + w.id).append( "<li class='ls'><a class='newadd' href=\"#/\">" + 
-          'You currently have no tasks for ' + w.name + '!' + "</a></li>" );
-      } else {
-        me.tasks[ w.id ] = tasks;
-        console.log( "Tasks for workspace " + w.id + " successfully retrieved: " + tasks );
-
-        for( let t of tasks ){
-          $('#ws' + w.id).append( "<li class='ls'><a class='n' href=\"#/\">" + 
-            t.name + "</a></li>" );
-        }
-        $('#ws' + w.id).append( "<li class='ls'><input type=\"text\" " + 
-          "class='newadd' href=\"#/\" placeholder=\"Type here to add a new task.\"></li>" );
-        $(".newadd").on( 'change', function(){ newTask(this); });
-      }
-    });
+    getTasksFromWorkspace( w );
   }
 }
-//<form > onsubmit=\"return newTask(this)\"/form>
+
+function getTasksFromWorkspace( w ){
+  var me = this;
+
+  ServerManager.tasks( w.id, function(tasks) {
+    if( tasks.length == 0 ){
+      $('#ws' + w.id).append( "<li class='ls'><a class='newadd' href=\"#/\">" + 
+        'You currently have no tasks for ' + w.name + '!' + "</a></li>" );
+    } else {
+      me.tasks[ w.id ] = tasks;
+      console.log( "Tasks for workspace " + w.id + " successfully retrieved: " + tasks );
+
+      for( let t of tasks ){
+        $('#ws' + w.id).append( "<li id='task" + t.id + "' class='ls'><button class=\"donetask\">" + 
+          "</button><a class='n' href=\"#/\">" + t.name + "</a></li>" );
+      }
+      $('#ws' + w.id).append( "<li class='ls'><input type=\"text\" " + 
+        "class='newadd' href=\"#/\" placeholder=\"Type here to add a new task.\"></li>" );
+      $(".newadd").off().on( 'change', function(){ newTask(this); });
+      $(".donetask").off().on( 'click', function(){ markTaskDone(this); });
+    }
+  });
+}
+
+function markTaskDone( element ){
+  var taskID = element.parentElement.id;
+  taskID = taskID.substring( 4, taskID.length );
+
+  var completedtask = {
+    completed: true
+  };
+
+  ServerManager.modifyTask( taskID, completedtask, function(){
+    var notifOptions = {
+      type: 'basic',
+      iconUrl: '/assets/icon128.png',
+      title: 'Completed Task!',
+      message: "You marked a task as complete! To undo, click this message."
+    };
+    sendNotification( 'markTaskDoneNotif', notifOptions, function(){
+      // TODO: Add undo functionality.
+    });
+  });
+
+  var unorderedlist = element.parentElement.parentElement;
+  unorderedlist.removeChild(element.parentElement);
+}
 
 function newTask( element ){
   var newtask = {
@@ -258,14 +293,24 @@ function newTask( element ){
   workspaceID = workspaceID.substring( 2, workspaceID.length );
   var notifOptions = {
     type: 'basic',
-    iconUrl: 'icon128.png',
+    iconUrl: '/assets/icon128.png',
     title: 'New task submission!',
     message: "You are submitting the following task: \"" + element.value + 
       " to the workspace with the id " + workspaceID + "\"!"
   };
   sendNotification( 'testernotification', notifOptions, function(){} );
   console.log( "New task created in " + workspaceID );
-  ServerManager.createTask( workspaceID, newtask, function(){} );
+  ServerManager.createTask( workspaceID, newtask, function(){
+    // TODO: Find way to actually add t.id and t.name
+    var t = {
+      id: ""
+    };
+    $('#ws' + workspaceID).prepend( "<li id='task" + t.id + "' class='ls'><button class=\"donetask\">" + 
+      "</button><a class='n' href=\"#/\">" + newtask.name + "</a></li>" );
+  });
+
+  // CLEARS the element so that it knows that something's been submitted.
+  element.value = "";
 }
 
 function changeWelcome( disp_str ){

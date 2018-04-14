@@ -160,6 +160,23 @@ ServerManager = {
   },
 
   /**
+   * Makes an Asana API request to complete a task in the system.
+   *
+   * @param task {dict} Task fields.
+   * @param callback {Function(response)} Callback on success.
+   */
+  modifyTask: function(task_id, task, callback, errback) {
+    var self = this;
+    AsanaBridge.request(
+        "PUT",
+        "/tasks/" + task_id + "",
+        task,
+        function(response) {
+          self._makeCallback(response, callback, errback);
+        });
+  },
+
+  /**
    * Requests user type-ahead completions for a query.
    */
   userTypeahead: function(workspace_id, query, callback, errback) {
