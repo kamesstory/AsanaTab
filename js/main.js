@@ -150,7 +150,7 @@ function checkTime(i) {
 
 function onCheckLogin( is_logged_in ){
   if( is_logged_in ){
-    console.log( "Successful login or login check to Asana." );
+    // console.log( "Successful login or login check to Asana." );
 
     ServerManager.logEvent({ name: "ChromeExtension-New-Tab" });
 
@@ -181,8 +181,10 @@ function retrieveWorkspaces( url, title, selected_text, favicon_url ){
     // WORKSPACES being implemented here
     ServerManager.workspaces( function(workspaces){
       me.workspaces = workspaces;
+      
+      // TODO: Introduce workspace sorting based on user preferences
       me.workspaces.sort( compareWorkspaces );
-      console.log( "Workplaces successfully retrieved: " + me.workspaces.map(a => a.name) );
+      // console.log( "Workplaces successfully retrieved: " + me.workspaces.map(a => a.name) );
 
       displayTasks();
     });
@@ -194,7 +196,7 @@ function compareWorkspaces(a, b){
 }
 
 function open_workspaces(){ 
-  console.log( "Workspaces are being opened on account of button click." );
+  // console.log( "Workspaces are being opened on account of button click." );
   $('.openasana_button').text( 'Loading...' );
   $('#loaderdiv').show();
   $('.workspace_container').show();
@@ -211,7 +213,7 @@ function displayTasks(){
   $('.openasana_button').css('cursor','default');
 
   for( let w of me.workspaces ){
-    console.log( "The workspace " + w.name + " has been called for." );
+    // console.log( "The workspace " + w.name + " has been called for." );
     // Creates a <div class='workspace_container'> and 
     // <ul id='ws' class='ls'> to go along with it
     var work_div = document.createElement("div");
@@ -266,6 +268,12 @@ function markTaskDone( element ){
     completed: true
   };
 
+  console.log( 'Marking task as done!' );
+
+  // saves this element in a variable to use later
+  var listitem = element.parentElement;
+  var unorderedlist =element.parentElement.parentElement;
+
   ServerManager.modifyTask( taskID, completedtask, function(){
     var notifOptions = {
       type: 'basic',
@@ -273,40 +281,57 @@ function markTaskDone( element ){
       title: 'Completed Task!',
       message: "You marked a task as complete! To undo, click this message."
     };
-    sendNotification( 'markTaskDoneNotif', notifOptions, function(){
-      // TODO: Add undo functionality.
-    });
+    sendNotification( 'markTaskDoneNotif', notifOptions, function(){});
   });
 
-  var unorderedlist = element.parentElement.parentElement;
   unorderedlist.removeChild(element.parentElement);
 }
 
 function newTask( element ){
+  var me = this;
+
+  // Generates random ID that is unique
+  var random_id = generateRandomID();
+  // console.log( 'random id is: ' + random_id.toString() );
   var newtask = {
     name: element.value,
     assignee: { id: this.user_id, name: this.user_name }
   };
-  console.log( 'newTask: element name is ' + element.value + "." );
+  // console.log( 'newTask: element name is ' + element.value + "." );
 
   var workspaceID = element.parentElement.parentElement.id;
   workspaceID = workspaceID.substring( 2, workspaceID.length );
+  var workspace_name = "";
+  for( let w of me.workspaces ){
+    if( parseInt(w.id) == parseInt(workspaceID) )
+      workspace_name = w.name;
+  }
   var notifOptions = {
     type: 'basic',
     iconUrl: '/assets/icon128.png',
     title: 'New task submission!',
-    message: "You are submitting the following task: \"" + element.value + 
-      " to the workspace with the id " + workspaceID + "\"!"
+    message: "You have submitted a new task to " + workspace_name + "!"
   };
   sendNotification( 'testernotification', notifOptions, function(){} );
   console.log( "New task created in " + workspaceID );
-  ServerManager.createTask( workspaceID, newtask, function(){
-    // TODO: Find way to actually add t.id and t.name
-    var t = {
-      id: ""
-    };
-    $('#ws' + workspaceID).prepend( "<li id='task" + t.id + "' class='ls'><button class=\"donetask\">" + 
+
+  $('#ws' + workspaceID).prepend( "<li id='" + random_id.toString() + "' class='ls'><button class=\"donetask\">" + 
       "</button><a class='n' href=\"#/\">" + newtask.name + "</a></li>" );
+
+  ServerManager.createTask( workspaceID, newtask, function(){
+    // Have to get actual task id and set li's id to the task id.
+    ServerManager.tasks( workspaceID, function(tasks){
+      // TODO: Improve this, still have to iterate through entire task list of workspace
+      // which is DEFINITELY not optimal, although it typically should be a small amount of tasks
+      // HOWEVER, tasks are typically sorted by priority or date, and since this was recently created
+      // there shouldn't be many tasks needed to iterate through, so it might be okay...
+      for( let t of tasks ){
+        if( t.name == newtask.name ) {
+          document.getElementById( random_id.toString() ).id = 'task' + t.id;
+          $(".donetask").off().on( 'click', function(){ markTaskDone(this); });
+        }
+      }
+    });
   });
 
   // CLEARS the element so that it knows that something's been submitted.
@@ -321,3 +346,10 @@ function changeWelcome( disp_str ){
 function printForUser( input ){
   // $('#developer_updates').text( input );
 }
+
+function generateRandomID() {
+  // Math.random should be unique because of its seeding algorithm.
+  // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+  // after the decimal.
+  return '_' + Math.random().toString(36).substr(2, 9);
+};

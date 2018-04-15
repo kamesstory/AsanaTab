@@ -76,6 +76,7 @@ li.ls input.newadd {
   font-size: 14px;
   display: inline;
   cursor: text;
+  background: #FBFBFB;
 }
 
 /* -------------- ANIMATIONS -------------- */

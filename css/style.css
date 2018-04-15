@@ -8,7 +8,7 @@
 }
 
 html { 
-  background: url("/assets/unsplash4.jpg") no-repeat bottom center fixed; 
+  background: url("/assets/unsplash5.jpg") no-repeat 0 -12vh fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -25,11 +25,13 @@ html {
   font-size: 25px;
   margin-bottom: 0.85%;
   margin-top: 1.25%;
+  /* color: #EEEEEE; */
 }
 
 .mainbody {
   font-family: 'Cardo';
   font-size: 16px;
+  /* color: #EEEEEE; */
 }
 
 .center {
@@ -39,6 +41,7 @@ html {
   z-index: 999;
   width: 100%;
   background: rgba(255,255,255,0.9);
+  border-bottom: 2px black;
   cursor: default;
 }
 
@@ -61,10 +64,10 @@ html {
 .main_clock_div #main_clock {
   display: inline;
   background-color: transparent;
-  color: #444444;
+  color: #EEEEEE;
   font-size: 90px;
   font-family: 'Lato';
-  text-shadow: 0px 0.1px 2px white;
+  text-shadow: 0px 0.1px 2px black;
   margin: 0.2vw;
   cursor: default;
   text-align: center;
@@ -73,25 +76,25 @@ html {
 .main_clock_div #main_clock_ampm {
   display: inline;
   background-color: transparent;
-  color: #444444;
+  color: #EEEEEE;
   font-size: 30px;
   font-family: 'Lato';
-  text-shadow: 0px 0.1px 2px white;
+  text-shadow: 0px 0.1px 2px black;
   cursor: default;
   text-align: center;
 }
 
 .fixed-bg #main_date {
   position: absolute;
+  color: #EEEEEE;
   top: 56%;
   left: 50%;
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   background-color: transparent;
-  color: #444444;
   font-size: 20px;
   font-family: 'Lato';
-  text-shadow: 0px 0.1px 2px white;
+  text-shadow: 0px 0.1px 2px black;
   padding: 12px 24px;
   cursor: default;
   border-radius: 5px;
@@ -105,8 +108,8 @@ html {
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   background-color: transparent;
-  border: 2px solid #444444;
-  color: #444444;
+  border: 2px solid #EEEEEE;
+  color: #EEEEEE;
   font-size: 16px;
   padding: 12px 24px;
   cursor: pointer;
@@ -138,17 +141,17 @@ html {
 
 #main_container .workspace_container {
   position: relative;
-  border-top: 1vh solid white;
-  border-left: 5vh solid white;
-  border-right: 5vh solid white;
-  border-bottom: 2vh solid white;
+  border-top: 1vh solid #FBFBFB;
+  border-left: 5vh solid #FBFBFB;
+  border-right: 5vh solid #FBFBFB;
+  border-bottom: 2vh solid #FBFBFB;
   margin-top: 3vh;
   margin-bottom: 3vh;
   -webkit-animation-name: animatebottom;
   -webkit-animation-duration: 1s;
   animation-name: animatebottom;
   animation-duration: 1s;
-  background: white;
+  background: #FBFBFB;
 }
 
 /* -------------- ANIMATIONS -------------- */
