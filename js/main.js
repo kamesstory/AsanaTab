@@ -248,12 +248,15 @@ function getTasksFromWorkspace( w ){
       me.tasks[ w.id ] = tasks;
       console.log( "Tasks for workspace " + w.id + " successfully retrieved: " + tasks );
 
+      var date_due;
       for( let t of tasks ){
-        $('#ws' + w.id).append( "<li id='task" + t.id + "' class='ls'><button class=\"donetask\">" + 
-          "</button><a class='n' href=\"#/\">" + t.name + "</a></li>" );
+        date_due = t.due_on;
+        $('#ws' + w.id).append( "<li id='task" + t.id + "' class='ls'><button class=\"donetask\"></button>" + 
+            "<a class='n' href=\"#/\">" + t.name + "</a><a class='duedate'>Due " + date_due + "</a></li>" );
       }
-      $('#ws' + w.id).append( "<li class='ls'><input type=\"text\" " + 
-        "class='newadd' href=\"#/\" placeholder=\"Type here to add a new task.\"></li>" );
+      $('#ws' + w.id).append( "<li class='ls2'>" + 
+        "<input type=\"text\" class='newadd' href=\"#/\" placeholder=\"Type here to add a new task.\">" + 
+        "<div><a class='in' href=\"#/\">Date Due:</a><input class='dateinput' type='date'></div></li>" );
       $(".newadd").off().on( 'change', function(){ newTask(this); });
       $(".donetask").off().on( 'click', function(){ markTaskDone(this); });
     }

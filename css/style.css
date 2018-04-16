@@ -118,6 +118,10 @@ html {
   display: none;
 }
 
+.fixed-bg .openasana_button:focus {
+  outline: none;
+}
+
 .fixed-bg #loaderspinner {
   position: absolute;
   top: 80%;

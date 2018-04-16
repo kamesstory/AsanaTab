@@ -16,6 +16,7 @@ ul.ls {
 
 li.ls {
   border-bottom: 1px solid #ccc;
+  padding: 1px;
 }
 
 li.ls:last-child {
@@ -27,12 +28,26 @@ li.ls:hover {
 }
 
 li.ls a.n {
-  padding:10px 20px 10px 20px;
+  position: absolute;
+  padding: 10px 0px 10px 5px;
   text-decoration: none;
   font-family: 'PT Sans', serif;
   font-size: 14px;
   color: #000;
-  display: block;
+  display: inline;
+  width: 75%;
+}
+
+li.ls a.duedate {
+  position: absolute;
+  right: 0px;
+  padding: 10px 0px 10px 0px;
+  text-decoration: none;
+  font-family: 'PT Sans', serif;
+  font-size: 14px;
+  color: #000;
+  display: inline;
+  width: 22.5%;
 }
 
 li.ls button.donetask{
@@ -44,7 +59,6 @@ li.ls button.donetask{
   width: 27px;
   height: 27px;
   display: inline;
-  float: left;
 }
 
 li.ls button.donetask:hover {
@@ -65,18 +79,54 @@ li.ls button.donetask:focus {
   border: none;
 }
 
-li.ls input.newadd {
-  width: 80%;
+li.ls2 {}
+
+li.ls2 input.newadd {
+  width: 72.5%;
   border: none;
   border-color: transparent;
   outline: none;
-  padding:10px 20px 10px 20px;
+  padding:10px 0px 10px 20px;
   text-decoration: none;
   font-family: 'PT Sans', serif;
   font-size: 14px;
   display: inline;
   cursor: text;
   background: #FBFBFB;
+}
+
+li.ls2 div {
+  position: absolute;
+  right: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 5px;
+  padding-right: 0px;
+  display: inline;
+  width: 25%;
+}
+
+li.ls2 a.in {
+  padding-right: 5px;
+  text-decoration: none;
+  font-family: 'PT Sans', serif;
+  font-size: 14px;
+  color: #777;
+  display: inline;
+  cursor: default;
+}
+
+li.ls2 input.dateinput {
+  border: none;
+  border-color: transparent;
+  outline: none;
+  text-decoration: none;
+  font-family: 'PT Sans', serif;
+  font-size: 14px;
+  display: inline;
+  cursor: text;
+  background: #FBFBFB;
+  color: #777;
 }
 
 /* -------------- ANIMATIONS -------------- */
