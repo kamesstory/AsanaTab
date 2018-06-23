@@ -318,8 +318,10 @@ function newTask( element ){
   sendNotification( 'testernotification', notifOptions, function(){} );
   console.log( "New task created in " + workspaceID );
 
-  $('#ws' + workspaceID).prepend( "<li id='" + random_id.toString() + "' class='ls'><button class=\"donetask\">" + 
-      "</button><a class='n' href=\"#/\">" + newtask.name + "</a></li>" );
+  var date_due;
+  $('#ws' + workspaceID).prepend( "<li id='" + random_id.toString() + 
+      "' class='ls'><button class=\"donetask\"></button>" + 
+      "<a class='n' href=\"#/\">" + newtask.name + "</a><a class='duedate'>Due " + date_due + "</a></li>" );
 
   ServerManager.createTask( workspaceID, newtask, function(){
     // Have to get actual task id and set li's id to the task id.

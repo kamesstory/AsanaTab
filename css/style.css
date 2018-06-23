@@ -8,7 +8,7 @@
 }
 
 html { 
-  background: url("/assets/unsplash5.jpg") no-repeat 0 -12vh fixed;
+  background: url("/assets/Sandy Unsplash Background.jpg") no-repeat 0 -14.5vh fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -22,10 +22,10 @@ html {
 
 .title {
   font-family: 'Ubuntu';
-  font-size: 25px;
+  font-size: 40px;
   margin-bottom: 0.85%;
   margin-top: 1.25%;
-  /* color: #EEEEEE; */
+  color: #444444;
 }
 
 .mainbody {
@@ -37,10 +37,10 @@ html {
 .center {
   text-align: center;
   height: 15%;
-  position: fixed;
+  position: absolute;
   z-index: 999;
   width: 100%;
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.0);
   border-bottom: 2px black;
   cursor: default;
 }
@@ -64,10 +64,10 @@ html {
 .main_clock_div #main_clock {
   display: inline;
   background-color: transparent;
-  color: #EEEEEE;
+  color: #444444;
   font-size: 90px;
   font-family: 'Lato';
-  text-shadow: 0px 0.1px 2px black;
+  /*text-shadow: 0px 0.1px 2px black;*/
   margin: 0.2vw;
   cursor: default;
   text-align: center;
@@ -76,17 +76,17 @@ html {
 .main_clock_div #main_clock_ampm {
   display: inline;
   background-color: transparent;
-  color: #EEEEEE;
+  color: #444444;
   font-size: 30px;
   font-family: 'Lato';
-  text-shadow: 0px 0.1px 2px black;
+  /*text-shadow: 0px 0.1px 2px black;*/
   cursor: default;
   text-align: center;
 }
 
 .fixed-bg #main_date {
   position: absolute;
-  color: #EEEEEE;
+  color: #444444;
   top: 56%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -94,7 +94,7 @@ html {
   background-color: transparent;
   font-size: 20px;
   font-family: 'Lato';
-  text-shadow: 0px 0.1px 2px black;
+  /*text-shadow: 0px 0.1px 2px black;*/
   padding: 12px 24px;
   cursor: default;
   border-radius: 5px;
@@ -108,8 +108,8 @@ html {
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   background-color: transparent;
-  border: 2px solid #EEEEEE;
-  color: #EEEEEE;
+  border: 2px solid #444444;
+  color: #444444;
   font-size: 16px;
   padding: 12px 24px;
   cursor: pointer;

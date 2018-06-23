@@ -16,7 +16,7 @@ ul.ls {
 
 li.ls {
   border-bottom: 1px solid #ccc;
-  padding: 1px;
+  padding: 0.5px;
 }
 
 li.ls:last-child {
@@ -29,7 +29,7 @@ li.ls:hover {
 
 li.ls a.n {
   position: absolute;
-  padding: 10px 0px 10px 5px;
+  padding: 10px 0px 10px 1.5px;
   text-decoration: none;
   font-family: 'PT Sans', serif;
   font-size: 14px;
