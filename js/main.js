@@ -56,6 +56,7 @@ $(document).ready(function() {
 
   startTime();
   startDate();
+  startModal();
 
   chrome.tabs.query({
     active: true,
@@ -158,7 +159,9 @@ function onCheckLogin( is_logged_in ){
   }
   else {
     // The user is not even logged in. Prompt them to do so!
-    changeWelcome( "there was an error logging into your asana. please make sure cookies are enabled." );
+    changeWelcome( "please log into your asana!" );
+    $('.openasana_button').show();
+    $('.openasana_button').attr("disabled", "disabled");
     me.showLogin(
         Options.loginUrl(options),
         Options.signupUrl(options));
@@ -248,15 +251,20 @@ function getTasksFromWorkspace( w ){
       me.tasks[ w.id ] = tasks;
       console.log( "Tasks for workspace " + w.id + " successfully retrieved: " + tasks );
 
-      var date_due;
+      // TODO: Fix Due Dates. These should be working as soon as possible!
+      // var date_due;
       for( let t of tasks ){
-        date_due = t.due_on;
+        // date_due = t.due_on;
+        // $('#ws' + w.id).append( "<li id='task" + t.id + "' class='ls'><button class=\"donetask\"></button>" + 
+        //     "<a class='n' href=\"#/\">" + t.name + "</a><a class='duedate'>Due " + date_due + "</a></li>" );
         $('#ws' + w.id).append( "<li id='task" + t.id + "' class='ls'><button class=\"donetask\"></button>" + 
-            "<a class='n' href=\"#/\">" + t.name + "</a><a class='duedate'>Due " + date_due + "</a></li>" );
+            "<a class='n' href=\"#/\">" + t.name + "</a></li>" );
       }
+      // $('#ws' + w.id).append( "<li class='ls2'>" + 
+      //   "<input type=\"text\" class='newadd' href=\"#/\" placeholder=\"Type here to add a new task.\">" + 
+      //   "<div><a class='in' href=\"#/\">Date Due:</a><input class='dateinput' type='date'></div></li>" );
       $('#ws' + w.id).append( "<li class='ls2'>" + 
-        "<input type=\"text\" class='newadd' href=\"#/\" placeholder=\"Type here to add a new task.\">" + 
-        "<div><a class='in' href=\"#/\">Date Due:</a><input class='dateinput' type='date'></div></li>" );
+        "<input type=\"text\" class='newadd' href=\"#/\" placeholder=\"Type here to add a new task.\">");
       $(".newadd").off().on( 'change', function(){ newTask(this); });
       $(".donetask").off().on( 'click', function(){ markTaskDone(this); });
     }
@@ -318,10 +326,13 @@ function newTask( element ){
   sendNotification( 'testernotification', notifOptions, function(){} );
   console.log( "New task created in " + workspaceID );
 
-  var date_due;
+  // var date_due;
+  // $('#ws' + workspaceID).prepend( "<li id='" + random_id.toString() + 
+  //     "' class='ls'><button class=\"donetask\"></button>" + 
+  //     "<a class='n' href=\"#/\">" + newtask.name + "</a><a class='duedate'>Due " + date_due + "</a></li>" );
   $('#ws' + workspaceID).prepend( "<li id='" + random_id.toString() + 
       "' class='ls'><button class=\"donetask\"></button>" + 
-      "<a class='n' href=\"#/\">" + newtask.name + "</a><a class='duedate'>Due " + date_due + "</a></li>" );
+      "<a class='n' href=\"#/\">" + newtask.name + "</a></li>" );
 
   ServerManager.createTask( workspaceID, newtask, function(){
     // Have to get actual task id and set li's id to the task id.
@@ -343,8 +354,36 @@ function newTask( element ){
   element.value = "";
 }
 
+function startModal(){
+  // // Get the modal
+  // var modal = document.getElementsByClassName('modal');
+
+  // // Get the button that opens the modal
+  // var btn = document.getElementById("myBtn");
+
+  // // Get the <span> element that closes the modal
+  // var span = document.getElementsByClassName("close")[0];
+
+  // When the user clicks on the button, open the modal 
+  $('#feedback_button').click(function() {
+      $('.modal').show();
+  });
+
+  // When the user clicks on <span> (x), close the modal
+  $('.close').click(function() {
+      $('.modal').hide();
+  });
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.addEventListener("click", function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  });
+}
+
 function changeWelcome( disp_str ){
-  $('#welcometext').text( disp_str );
+  $('.openasana_button').text( disp_str );
 }
 
 // Takes in a string input and outputs it in the welcome text
