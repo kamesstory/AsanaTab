@@ -245,8 +245,7 @@ function getTasksFromWorkspace( w ){
 
   ServerManager.tasks( w.id, function(tasks) {
     if( tasks.length == 0 ){
-      $('#ws' + w.id).append( "<li class='ls'><a class='newadd' href=\"#/\">" + 
-        'You currently have no tasks for ' + w.name + '!' + "</a></li>" );
+      addNoTasksMessage( w );
     } else {
       me.tasks[ w.id ] = tasks;
       console.log( "Tasks for workspace " + w.id + " successfully retrieved: " + tasks );
@@ -263,12 +262,17 @@ function getTasksFromWorkspace( w ){
       // $('#ws' + w.id).append( "<li class='ls2'>" + 
       //   "<input type=\"text\" class='newadd' href=\"#/\" placeholder=\"Type here to add a new task.\">" + 
       //   "<div><a class='in' href=\"#/\">Date Due:</a><input class='dateinput' type='date'></div></li>" );
-      $('#ws' + w.id).append( "<li class='ls2'>" + 
-        "<input type=\"text\" class='newadd' href=\"#/\" placeholder=\"Type here to add a new task.\">");
-      $(".newadd").off().on( 'change', function(){ newTask(this); });
       $(".donetask").off().on( 'click', function(){ markTaskDone(this); });
     }
+    $('#ws' + w.id).append( "<li class='ls2'>" + 
+      "<input type=\"text\" class='newadd' href=\"#/\" placeholder=\"Type here to add a new task.\">");
+    $(".newadd").off().on( 'change', function(){ newTask(this); });
   });
+}
+
+function addNoTasksMessage( w ){
+  $('#ws' + w.id).prepend( "<li class='ls' id='notasks'><a class='newadd' href=\"#/\">" + 
+    'You currently have no tasks for ' + w.name + '!' + "</a></li>" );
 }
 
 function markTaskDone( element ){
@@ -283,7 +287,7 @@ function markTaskDone( element ){
 
   // saves this element in a variable to use later
   var listitem = element.parentElement;
-  var unorderedlist =element.parentElement.parentElement;
+  var unorderedlist = element.parentElement.parentElement;
 
   ServerManager.modifyTask( taskID, completedtask, function(){
     var notifOptions = {
@@ -296,6 +300,9 @@ function markTaskDone( element ){
   });
 
   unorderedlist.removeChild(element.parentElement);
+  if( unorderedlist.length <= 1 ){
+    addNoTasksMessage(unorderedlist);
+  }
 }
 
 function newTask( element ){
@@ -330,6 +337,12 @@ function newTask( element ){
   // $('#ws' + workspaceID).prepend( "<li id='" + random_id.toString() + 
   //     "' class='ls'><button class=\"donetask\"></button>" + 
   //     "<a class='n' href=\"#/\">" + newtask.name + "</a><a class='duedate'>Due " + date_due + "</a></li>" );
+
+  // Before adding new task, you must FIRST destroy any "no tasks available" sign that exists.
+  if( $('#ws' + workspaceID).length == 2 && $('#ws' + workspaceID + ' li').first().attr('id') == 'notasks' ){
+    $('#ws' + workspaceID + ' li').first().remove();
+  }
+
   $('#ws' + workspaceID).prepend( "<li id='" + random_id.toString() + 
       "' class='ls'><button class=\"donetask\"></button>" + 
       "<a class='n' href=\"#/\">" + newtask.name + "</a></li>" );

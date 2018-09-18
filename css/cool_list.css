@@ -19,6 +19,10 @@ li.ls {
   padding: 0.5px;
 }
 
+li.ls #notasks{
+  
+}
+
 li.ls:last-child {
   border: none;
 }
