@@ -2,8 +2,8 @@
  *              Main javascript file for AsanaTab
  * --------------------------------------------------------------- */
 
-// Is this an external popup window? (vs. the one from the menu)
-var is_external = false;
+// Set to true if we are debugging local storage
+const debuggingLocalStorage = false;
 
 // Options loaded when popup opened.
 var options = null;
@@ -28,21 +28,13 @@ var workspaces = null;
 var users = null;
 var user_id = null;
 var user_name = null;
-var tasks = null;
+var tasks_for_workspace = null;
 
 // Typeahead ui element
 var typeahead = null;
 
 // The tab that contains this extension (new tab)
 var tab = null;
-
-// chrome.storage.sync.set({key: value}, function() {
-//   console.log('Value is set to ' + value);
-// });
-//
-// chrome.storage.sync.get(['key'], function(result) {
-//   console.log('Value currently is ' + result.key);
-// });
 
 //                                                               //
 // -------------------------- MAIN JS -------------------------- //
@@ -59,7 +51,17 @@ $(document).ready(function() {
 
   // This sets the click functionality for the opening button
   $('.openasana_button').click(function(){
-    open_workspaces();
+    // if( debuggingLocalStorage == undefined ) console.log( "Crap!" );
+    if( debuggingLocalStorage == false ){
+      console.log( "NOTICE: Local Storage debugging is not enabled!");
+      open_workspaces();
+    } else {
+      debugger // DEBUG:
+      chrome.storage.sync.clear(function(){
+        open_workspaces();
+        console.log( "DEBUG: All local storage has been cleared!");
+      });
+    }
   });
 
   startTime();
@@ -176,25 +178,109 @@ function onCheckLogin( is_logged_in ){
   }
 }
 
-function retrieveWorkspaces( url, title, selected_text, favicon_url ){
-  var me = this;
+function findCurrentWorkspacesWithOrdering( ordering, workspaces, banned ){
+  // TODO: Fix the fuckup that is the fact that workspaces acesses via . and
+  //    ordering and banned access via ['']
+  // TODO: This is ridiculously slow and I hate it
+  // TODO: What the heck is a local variable and which is a global? FIX PLEASE!
+  console.log('This is the ordering for workspace_ordering:');
+  for( let wo of ordering ){
+    console.log( "Workspace id " + wo['id'] + " with name " + wo['name'] + " has index " + wo['index'] + ".");
+    for( let i = 0; i < workspaces.length; i++ ){
+      workspace = workspaces[i];
+      if( workspace.id == wo['id'] ){
+        // switch the location of the two
+        destination_index = wo['index'];
+        current_workspace = workspaces[destination_index];
+        workspaces[destination_index] = workspace;
+        workspaces[i] = current_workspace;
+      }
+    }
+  }
 
-  me.page_url = url;
-  me.page_title = title;
-  me.page_selection = selected_text;
-  me.favicon_url = favicon_url;
+  // TODO: Get ban to work correctly!
+  for( let workspace of workspaces ){
+    if( banned.some(e => e['id'] == workspace.id) ){
+      workspaces.splice( workplace.indexOf(workspace), 1 );
+    }
+  }
+
+  return workspaces;
+}
+
+function retrieveWorkspaces( url, title, selected_text, fav_url ){
+  page_url = url;
+  page_title = title;
+  page_selection = selected_text;
+  favicon_url = fav_url;
 
   ServerManager.me( function(user) {
-    me.user_id = user.id;
-    me.user_name = user.name;
+    user_id = user.id;
+    user_name = user.name;
 
     // Creates workspaces here
-    ServerManager.workspaces( function(workspaces){
-      me.workspaces = workspaces;
-      // TODO: Introduce workspace sorting based on user preferences
-      me.workspaces.sort( compareWorkspaces );
+    ServerManager.workspaces( function(ws){
+      workspaces = ws;
+      // TODO: Nest all log messages underneath one debug function with input-able message.
+      console.log( "Length of workspaces: " + workspaces.length );
 
-      displayTasks();
+      // TODO: Introduce workspace sorting based on user preferences
+      chrome.storage.sync.get(['current_workspaces', 'workspace_ordering', 'banned_workspaces'], function(result) {
+        // Just always save everything back, since there are sync problems
+
+        // Do requisite checks for empty storage
+        var workspace;
+        if( result.current_workspaces == undefined || result.current_workspaces.length == 0 ){
+          result.current_workspaces = workspaces;
+          console.log( "DEBUG: Current Workspaces is currently not saved in storage!");
+        }
+        if( result.banned_workspaces == undefined ){
+          result.banned_workspaces = [];
+          console.log( "DEBUG: Banned Workspaces is currently not saved in storage!");
+          chrome.storage.sync.set({'banned_workspaces': []});
+        } else if( result.banned_workspaces.length == 0 ){
+          console.log( "DEBUG: Banned Workspaces currently has no banned workspaces!");
+        }
+        if( result.workspace_ordering == undefined || result.workspace_ordering.length == 0 ){
+          console.log( "DEBUG: Workspace Ordering is currently not saved in storage!");
+          workspaces.sort( compareWorkspaces );
+          result.workspace_ordering = [];
+          // Save workspace_ordering as tuple with {id, name}.
+          for( let i = 0; i < workspaces.length; i++ ){
+            workspace = workspaces[i];
+            console.log("DEBUG: Workspace", workspace.name, "with id", workspace.id, "is being saved.");
+            result.workspace_ordering.push( {'id': workspace.id, 'name': workspace.name, 'index': i} );
+            var test = result.workspace_ordering[result.workspace_ordering.length-1];
+            console.log("DEBUG: Workspace", test['name'], "with id", test['id'], "has been saved!");
+          }
+        }
+
+        for( let i = 0; i < workspaces.length; i++ ){
+          // TODO: Need to find a way to update names of workspaces that have updated names!
+          workspace = workspaces[i];
+          // If there are workspaces not in current workspaces, add it
+          if( result.current_workspaces.some(e => e['id'] == workspace.id) == false ) {
+            result.current_workspaces.push( {'id': workspace.id, 'name': workspace.name} );
+          }
+          // If there are workspaces not in current workspaces, add it to end of workspace_ordering
+          if( result.workspace_ordering.some(e => e['id'] == workspace.id) == false ) {
+            console.log("DEBUG: Workspace_ordering does not have workspace", workspace.name, "with workspace id", workspace.id);
+            result.workspace_ordering.push( {'id': workspace.id, 'name': workspace.name, 'index': result.workspace_ordering.length} );
+          }
+          // workplace.indexOf(workspace);
+        }
+
+        workspaces = findCurrentWorkspacesWithOrdering( result.workspace_ordering, workspaces, result.banned_workspaces );
+
+        chrome.storage.sync.set({'current_workspaces': result.current_workspaces}, function(){
+          chrome.storage.sync.set({'workspace_ordering': result.workspace_ordering}, function() {
+            console.log("Workspace ordering and current workspaces saved in local storage!");
+            // workspaces.sort( compareWorkspaces );
+
+            displayTasks();
+          });
+        });
+      });
     });
   });
 }
@@ -213,15 +299,14 @@ function open_workspaces(){
 
 // “https://app.asana.com/api/1.0/tasks?assignee=me&completed_since=now&limit=100&workspace=[workspace_id]23”
 function displayTasks(){
-  var me = this;
-  me.tasks = {};
+  tasks_for_workspace = {};
 
   $('.openasana_button').text( 'Scroll down to see workspaces.' );
   $('.openasana_button').prop( 'disabled', true );
   $('.openasana_button').css('cursor','default');
 
-  for( let w of me.workspaces ){
-    // console.log( "The workspace " + w.name + " has been called for." );
+  for( let w of workspaces ){
+    console.log( "The workspace " + w.name + " has been called for." );
     // Creates a <div class='workspace_container'> and
     // <ul id='ws' class='ls'> to go along with it
     var work_div = document.createElement("div");
@@ -252,7 +337,7 @@ function getTasksFromWorkspace( w ){
     if( tasks.length == 0 ){
       addNoTasksMessage( w );
     } else {
-      me.tasks[ w.id ] = tasks;
+      tasks_for_workspace[ w.id ] = tasks;
       console.log( "Tasks for workspace " + w.id + " successfully retrieved: " + tasks );
 
       // TODO: Fix Due Dates. These should be working as soon as possible!
@@ -383,11 +468,83 @@ function newTask( element ){
 function enableSettingsModal(){
   // When the user clicks on the button, open the modal
   $('#settings_button').click(function() {
-      $('.modal').show();
+    // Could generate content here?
+    $('.modal-body').empty();
+
+    chrome.storage.sync.get(['current_workspaces', 'workspace_ordering', 'banned_workspaces'], function(result) {
+      if( result.current_workspaces == undefined || result.workspace_ordering == undefined ){
+        var error_header = document.createElement("H2");
+        var error_text = document.createTextNode("No workspaces have been saved to storage! Error.");
+        error_header.appendChild( error_text );
+
+        // Appends all this to the actual modal body
+        $('.modal-body').append(error_header);
+
+        $('.modal').show();
+      } else {
+        // TODO: method does not work because workspaces isn't defined!!!
+        s_workspaces = findCurrentWorkspacesWithOrdering(result.workspace_ordering, workspaces, result.banned_workspaces);
+
+        // Creates current workspaces list
+        var current_container = document.createElement("DIV");
+        current_container.setAttribute("display", "inline-block");
+        var current_workspaces_header = document.createElement("H2");
+        current_workspaces_header.setAttribute("class", 'modal-list-header');
+        var cwh_text = document.createTextNode("My Current Workspaces");
+        current_workspaces_header.appendChild( cwh_text );
+
+        var cw_list = document.createElement("UL");
+        cw_list.id = 'm-cur-work-list';
+        cw_list.class = 'modal-list';
+        for( let sw of s_workspaces ){
+          console.log("DEBUG: Modal generating workspace", sw.name);
+          var li = document.createElement("LI");
+          li.setAttribute("id", 'm-c-ws' + sw.id);
+          li.setAttribute("class", 'modal-list-item');
+          li.appendChild(document.createTextNode(sw.name));
+          cw_list.appendChild( li );
+        }
+        current_container.appendChild(current_workspaces_header);
+        current_container.appendChild(cw_list);
+
+        // Creates banned workspaces list
+        var banned_container = document.createElement("DIV");
+        banned_container.setAttribute("display", "inline-block");
+        var banned_workspaces_header = document.createElement("H2");
+        banned_workspaces_header.setAttribute("class", 'modal-list-header');
+        var bwh_text = document.createTextNode("Banned Workspaces");
+        banned_workspaces_header.appendChild( bwh_text );
+
+        var bw_list = document.createElement("UL");
+        bw_list.id = 'm-ban-work-list';
+        bw_list.class = 'modal-list';
+        for( let bw of result.banned_workspaces ){
+          console.log("DEBUG: Modal generating banned workspace", bw.name);
+          var li = document.createElement("LI");
+          li.setAttribute("id", 'm-b-ws' + bw['id']);
+          li.setAttribute("class", 'modal-list-item');
+          li.appendChild(document.createTextNode(bw['name']));
+          bw_list.appendChild( li );
+        }
+        banned_container.appendChild(banned_workspaces_header);
+        banned_container.appendChild(bw_list);
+
+        // Appends all this to the actual modal body
+        $('.modal-body').append(current_container);
+        $('.modal-body').append(banned_container);
+
+        // NOW, we can show the modal!
+        $('.modal').show();
+      }
+    });
   });
 
+  $('.modal').on('shown', function () {
+    $('.modal-header').focus();
+  })
+
   // When the user clicks on <span> (x), close the modal
-  $('.close').click(function() {
+  $('#modal-close').click(function() {
       $('.modal').hide();
   });
 }

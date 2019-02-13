@@ -20,7 +20,7 @@ li.ls {
 }
 
 li.ls #notasks{
-  
+
 }
 
 li.ls:last-child {
@@ -136,11 +136,11 @@ li.ls2 input.dateinput {
 /* -------------- ANIMATIONS -------------- */
 
 @-webkit-keyframes colorChange {
-  from { opacity:0 } 
+  from { opacity:0 }
   to { opacity:1 }
 }
 
-@keyframes colorChange { 
-  from{ opacity:0 } 
+@keyframes colorChange {
+  from{ opacity:0 }
   to{ opacity:1 }
 }
