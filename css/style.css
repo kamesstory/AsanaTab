@@ -7,8 +7,8 @@
   color:#333333;
 }
 
-html { 
-  background: url("/assets/Sandy Unsplash Background.jpg") no-repeat 0 -14.5vh fixed;
+html {
+  background: url("/assets/unsplash3.jpg") no-repeat 0 -55vh fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -16,8 +16,8 @@ html {
   height: 100%;
 }
 
-::-webkit-scrollbar { 
-    display: none; 
+::-webkit-scrollbar {
+    display: none;
 }
 
 .title {
@@ -25,7 +25,7 @@ html {
   font-size: 40px;
   margin-bottom: 0.85%;
   margin-top: 1.25%;
-  color: #444444;
+  color: #F6F6EC;
 }
 
 .mainbody {
@@ -45,24 +45,34 @@ html {
   cursor: default;
 }
 
-.feedback {
+.action_buttons_dock {
   position: fixed;
   z-index: 999;
   width: 100%;
   background: rgba(255,255,255,0.0);
   cursor: default;
-  bottom: 0px;
+  bottom: 2vh;
 }
 
-.feedback #feedback_button {
-  background-color: transparent;
+.action_buttons_dock #feedback_button {
+  background: url("/assets/love.png") center no-repeat;
+  background-size: auto 100%;
+  float: left;
   border: 0px;
-  color: #444444;
-  font-size: 16px;
-  padding: 12px 24px;
+  width: 4vw;
+  height: 4vh;
   cursor: pointer;
-  border-radius: 5px;
-  text-align: center;
+  outline: none;
+}
+
+.action_buttons_dock #settings_button {
+  background: url("/assets/settings.png") center no-repeat;
+  background-size: auto 100%;
+  float: right;
+  border: 0px;
+  width: 4vw;
+  height: 4vh;
+  cursor: pointer;
   outline: none;
 }
 
@@ -85,7 +95,7 @@ html {
 .main_clock_div #main_clock {
   display: inline;
   background-color: transparent;
-  color: #444444;
+  color: #FFFFEE;
   font-size: 90px;
   font-family: 'Lato';
   /*text-shadow: 0px 0.1px 2px black;*/
@@ -97,7 +107,7 @@ html {
 .main_clock_div #main_clock_ampm {
   display: inline;
   background-color: transparent;
-  color: #444444;
+  color: #FFFFEE;
   font-size: 30px;
   font-family: 'Lato';
   /*text-shadow: 0px 0.1px 2px black;*/
@@ -107,7 +117,7 @@ html {
 
 .fixed-bg #main_date {
   position: absolute;
-  color: #444444;
+  color: #FFFFEE;
   top: 56%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -129,8 +139,8 @@ html {
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   background-color: transparent;
-  border: 2px solid #444444;
-  color: #444444;
+  border: 2px solid #F6F6EC;
+  color: #F6F6EC;
   font-size: 16px;
   padding: 12px 24px;
   cursor: pointer;
@@ -249,21 +259,21 @@ html {
 /* -------------- ANIMATIONS -------------- */
 
 @-webkit-keyframes animatebottom {
-  from { bottom:-100px; opacity:0 } 
+  from { bottom:-100px; opacity:0 }
   to { bottom:0px; opacity:1 }
 }
 
-@keyframes animatebottom { 
-  from{ bottom:-100px; opacity:0 } 
+@keyframes animatebottom {
+  from{ bottom:-100px; opacity:0 }
   to{ bottom:0; opacity:1 }
 }
 
 @-webkit-keyframes fadeOut {
-  from { opacity:1 } 
+  from { opacity:1 }
   to { opacity:0 }
 }
 
-@keyframes fadeOut { 
-  from{ opacity:1 } 
+@keyframes fadeOut {
+  from{ opacity:1 }
   to{ opacity:0 }
 }

@@ -36,13 +36,21 @@ var typeahead = null;
 // The tab that contains this extension (new tab)
 var tab = null;
 
+// chrome.storage.sync.set({key: value}, function() {
+//   console.log('Value is set to ' + value);
+// });
+//
+// chrome.storage.sync.get(['key'], function(result) {
+//   console.log('Value currently is ' + result.key);
+// });
+
+//                                                               //
+// -------------------------- MAIN JS -------------------------- //
+//                                                               //
+
 // Only executes such things when the document is ready to load
 $(document).ready(function() {
   var me = this;
-
-  // TODO: Find way to optimize all of this so it doesn't drain so much damn memory and performance
-  // TODO: If this ends up being too intensive for loading, just add a button that allows people to display
-  // at their own convenience
 
   // Our default error handler.
   ServerManager.onError = function(response) {
@@ -56,7 +64,7 @@ $(document).ready(function() {
 
   startTime();
   startDate();
-  startModal();
+  enableSettingsModal();
 
   chrome.tabs.query({
     active: true,
@@ -77,7 +85,7 @@ $(document).ready(function() {
   // If not, dynamically grab workspaces and to-do items and slap them onto the page
 
   // Add new changes to cache and local storage
-  
+
 });
 
 function sendNotification( title, options, callback ){
@@ -95,11 +103,11 @@ function startTime() {
   var s = today.getSeconds();
   if( h > 12 ){
     h -= 12;
-    $('#main_clock_ampm').text( "PM" );  
+    $('#main_clock_ampm').text( "PM" );
   }
   else if ( h == 0 ){
     h = 12;
-    $('#main_clock_ampm').text( "AM" );  
+    $('#main_clock_ampm').text( "AM" );
   }
   m = checkTime(m);
   s = checkTime(s);
@@ -107,8 +115,8 @@ function startTime() {
   if( h > 22 && m > 55 )
     startDate();
 
-  $('#main_clock').text( "" + h + ":" + m + ":" + s + "" ); 
-  
+  $('#main_clock').text( "" + h + ":" + m + ":" + s + "" );
+
   var t = setTimeout(startTime, 500);
 }
 
@@ -160,11 +168,11 @@ function onCheckLogin( is_logged_in ){
   else {
     // The user is not even logged in. Prompt them to do so!
     changeWelcome( "please log into your asana!" );
+    $('.openasana_button').unbind( "click" );
     $('.openasana_button').show();
-    $('.openasana_button').attr("disabled", "disabled");
-    me.showLogin(
-        Options.loginUrl(options),
-        Options.signupUrl(options));
+    $('.openasana_button').click(function(){
+      window.open("https://asana.com/#login","_self")
+    });
   }
 }
 
@@ -176,18 +184,15 @@ function retrieveWorkspaces( url, title, selected_text, favicon_url ){
   me.page_selection = selected_text;
   me.favicon_url = favicon_url;
 
-  ServerManager.me( function(user) { 
-    // changeWelcome( "Welcome, " + user.name + "! Please feel free to browse your projects below." );
+  ServerManager.me( function(user) {
     me.user_id = user.id;
     me.user_name = user.name;
 
-    // WORKSPACES being implemented here
+    // Creates workspaces here
     ServerManager.workspaces( function(workspaces){
       me.workspaces = workspaces;
-      
       // TODO: Introduce workspace sorting based on user preferences
       me.workspaces.sort( compareWorkspaces );
-      // console.log( "Workplaces successfully retrieved: " + me.workspaces.map(a => a.name) );
 
       displayTasks();
     });
@@ -198,7 +203,7 @@ function compareWorkspaces(a, b){
   return a.name.localeCompare(b.name);
 }
 
-function open_workspaces(){ 
+function open_workspaces(){
   // console.log( "Workspaces are being opened on account of button click." );
   $('.openasana_button').text( 'Loading...' );
   $('#loaderdiv').show();
@@ -217,7 +222,7 @@ function displayTasks(){
 
   for( let w of me.workspaces ){
     // console.log( "The workspace " + w.name + " has been called for." );
-    // Creates a <div class='workspace_container'> and 
+    // Creates a <div class='workspace_container'> and
     // <ul id='ws' class='ls'> to go along with it
     var work_div = document.createElement("div");
     work_div.className = 'workspace_container';
@@ -254,24 +259,24 @@ function getTasksFromWorkspace( w ){
       // var date_due;
       for( let t of tasks ){
         // date_due = t.due_on;
-        // $('#ws' + w.id).append( "<li id='task" + t.id + "' class='ls'><button class=\"donetask\"></button>" + 
+        // $('#ws' + w.id).append( "<li id='task" + t.id + "' class='ls'><button class=\"donetask\"></button>" +
         //     "<a class='n' href=\"#/\">" + t.name + "</a><a class='duedate'>Due " + date_due + "</a></li>" );
-        $('#ws' + w.id).append( "<li id='task" + t.id + "' class='ls'><button class=\"donetask\"></button>" + 
+        $('#ws' + w.id).append( "<li id='task" + t.id + "' class='ls'><button class=\"donetask\"></button>" +
             "<a class='n' href=\"#/\">" + t.name + "</a></li>" );
       }
-      // $('#ws' + w.id).append( "<li class='ls2'>" + 
-      //   "<input type=\"text\" class='newadd' href=\"#/\" placeholder=\"Type here to add a new task.\">" + 
+      // $('#ws' + w.id).append( "<li class='ls2'>" +
+      //   "<input type=\"text\" class='newadd' href=\"#/\" placeholder=\"Type here to add a new task.\">" +
       //   "<div><a class='in' href=\"#/\">Date Due:</a><input class='dateinput' type='date'></div></li>" );
       $(".donetask").off().on( 'click', function(){ markTaskDone(this); });
     }
-    $('#ws' + w.id).append( "<li class='ls2'>" + 
+    $('#ws' + w.id).append( "<li class='ls2'>" +
       "<input type=\"text\" class='newadd' href=\"#/\" placeholder=\"Type here to add a new task.\">");
     $(".newadd").off().on( 'change', function(){ newTask(this); });
   });
 }
 
 function addNoTasksMessage( w ){
-  $('#ws' + w.id).prepend( "<li class='ls' id='notasks'><a class='newadd' href=\"#/\">" + 
+  $('#ws' + w.id).prepend( "<li class='ls' id='notasks'><a class='newadd' href=\"#/\">" +
     'You currently have no tasks for ' + w.name + '!' + "</a></li>" );
 }
 
@@ -334,8 +339,8 @@ function newTask( element ){
   console.log( "New task created in " + workspaceID );
 
   // var date_due;
-  // $('#ws' + workspaceID).prepend( "<li id='" + random_id.toString() + 
-  //     "' class='ls'><button class=\"donetask\"></button>" + 
+  // $('#ws' + workspaceID).prepend( "<li id='" + random_id.toString() +
+  //     "' class='ls'><button class=\"donetask\"></button>" +
   //     "<a class='n' href=\"#/\">" + newtask.name + "</a><a class='duedate'>Due " + date_due + "</a></li>" );
 
   // Before adding new task, you must FIRST destroy any "no tasks available" sign that exists.
@@ -343,20 +348,28 @@ function newTask( element ){
     $('#ws' + workspaceID + ' li').first().remove();
   }
 
-  $('#ws' + workspaceID).prepend( "<li id='" + random_id.toString() + 
-      "' class='ls'><button class=\"donetask\"></button>" + 
+  $('#ws' + workspaceID).prepend( "<li id='" + random_id.toString() +
+      "' class='ls'><button class=\"donetask\"></button>" +
       "<a class='n' href=\"#/\">" + newtask.name + "</a></li>" );
+  // Should grey out and inactivate the button so that it cannot be clicked.
+  // TODO: Add faded grey color.
+  // TODO: Isolate to only this specific button instance
+  // $('#ws' + workspaceID + "." + random_id.toString() ).off();
 
   ServerManager.createTask( workspaceID, newtask, function(){
     // Have to get actual task id and set li's id to the task id.
     ServerManager.tasks( workspaceID, function(tasks){
+      // NOTE: This is the callback after the API request is returned
       // TODO: Improve this, still have to iterate through entire task list of workspace
       // which is DEFINITELY not optimal, although it typically should be a small amount of tasks
       // HOWEVER, tasks are typically sorted by priority or date, and since this was recently created
       // there shouldn't be many tasks needed to iterate through, so it might be okay...
       for( let t of tasks ){
         if( t.name == newtask.name ) {
+          // TODO: Resets IDs, probably not best architecture for such a thing!!!
+          // Probably shoudl have parent div house the actual ID. Better architecture.
           document.getElementById( random_id.toString() ).id = 'task' + t.id;
+          // TODO: Isolate to only specific button instance, not all .donetask buttons
           $(".donetask").off().on( 'click', function(){ markTaskDone(this); });
         }
       }
@@ -367,31 +380,15 @@ function newTask( element ){
   element.value = "";
 }
 
-function startModal(){
-  // // Get the modal
-  // var modal = document.getElementsByClassName('modal');
-
-  // // Get the button that opens the modal
-  // var btn = document.getElementById("myBtn");
-
-  // // Get the <span> element that closes the modal
-  // var span = document.getElementsByClassName("close")[0];
-
-  // When the user clicks on the button, open the modal 
-  $('#feedback_button').click(function() {
+function enableSettingsModal(){
+  // When the user clicks on the button, open the modal
+  $('#settings_button').click(function() {
       $('.modal').show();
   });
 
   // When the user clicks on <span> (x), close the modal
   $('.close').click(function() {
       $('.modal').hide();
-  });
-
-  // When the user clicks anywhere outside of the modal, close it
-  window.addEventListener("click", function(event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
   });
 }
 
@@ -404,6 +401,7 @@ function printForUser( input ){
   // $('#developer_updates').text( input );
 }
 
+// TODO: Get rid of this absolute shit. Use some hashing function or something.
 function generateRandomID() {
   // Math.random should be unique because of its seeding algorithm.
   // Convert it to base 36 (numbers + letters), and grab the first 9 characters

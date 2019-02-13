@@ -10,6 +10,13 @@
     <link rel='stylesheet' href='css/style.css'>
     <link rel='stylesheet' href='css/cool_list.css'>
     <script src="js/jquery-3.3.1.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script> -->
+
+    <!-- Modals -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" /> -->
+
+    <!-- Scripts for extension -->
     <script type="text/javascript" src='js/options.js'></script>
     <script type="text/javascript" src='js/asana_bridge.js'></script>
     <script type="text/javascript" src='js/server_mngr.js'></script>
@@ -18,30 +25,30 @@
   <body>
   	<!-- LANDING PAGE & GATE TO ASANA FUNCTIONALITY -->
     <div class='center'>
-			<h1 class="title" align="center"> tabs for asana </h1>
+			<!-- <h1 class="title" align="center"> tabs for asana </h1> -->
     </div>
     <div class='fixed-bg'>
-      <button class='openasana_button'>view tasks</button>
+      <button class='openasana_button'>open asanatabs</button>
       <!-- <img id='loaderspinner' src="cropped_loader.gif" alt="loader spinner icon"> -->
       <div class='main_clock_div'>
         <p id='main_clock'></p>
         <p id='main_clock_ampm'>AM</p>
       </div>
       <p id='main_date'></p>
-    </div>
 
-    <!-- TODO: Fix Feedback modal! -->
-    <!-- FEEDBACK-RELATED BUTTONS & OPTIONS -->
+      <!-- TODO: Fix Feedback modal! -->
+      <!-- FEEDBACK-RELATED BUTTONS & OPTIONS -->
 
-    <!-- <div class='feedback'>
-    	<button id='feedback_button'>give feedback</button>
+      <div class='action_buttons_dock'>
+      	<!-- <input type="submit" value="" id='feedback_button'></input> -->
+        <input type="submit" value="" id='settings_button'></input>
+      </div>
     </div>
 
 		<div class="modal">
 		  <div class="modal-content">
 		    <div class="modal-header">
-			    <span class="close">&times;</span>
-			    <h2>Modal Header</h2>
+			    <h2>This is the modal header.</h2>
 			  </div>
 			  <div class="modal-body">
 			    <p>Some text in the Modal Body</p>
@@ -51,29 +58,9 @@
 			    <h3>Modal Footer</h3>
 			  </div>
 		  </div>
-		</div> -->
+		</div>
 
 		<!-- MAIN CONTENT -->
-    <div id='main_container'>
-      <!--
-      <div class='workspace_container'>
-        <ul id='temp_list' class='ls'>
-        </ul>
-      </div>
-      -->
-    </div>
+    <div id='main_container'></div>
   </body>
 </html>
-
-<!-- OLD STUFF -->
-<!-- <div id='loaderdiv'> -->
-			<!-- <img id='loaderspinner' src="cropped_loader.gif" alt="loader spinner icon"> -->
-      <!-- <h3 id='developer_updates'></h3> -->
-
-			<!--
-      <p id='clock'></p>
-      <p id='text' data-clipboard-target='#text'>loading...</p>
-        <a id='gen' href=''>generate</a>
-        <a id='tog' href=''><i class="material-icons" id="auto-check">check_box_outline_blank</i>auto</a>
-        <a id='clock-tog' href=''><i class="material-icons">access_time</i></a>
-    </div> -->
