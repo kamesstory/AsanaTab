@@ -199,7 +199,8 @@ function getCurrentWorkspacesWithOrdering( ordering, workspaces, banned ){
   }
 
   // TODO: Get ban to work correctly!
-  for( let workspace of workspaces ){
+  for( let i = workspaces.length-1; i >= 0; i-- ){
+    let workspace = workspaces[i];
     console.log( "%c Workspace id " + workspace.id + " has name " + workspace.name + ".", 'background: #222; color: #55bada' );
     if( banned.some(e => e.id == workspace.id) ){
       workspaces.splice( workspaces.indexOf(workspace), 1 );
