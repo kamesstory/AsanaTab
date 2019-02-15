@@ -178,7 +178,7 @@ function onCheckLogin( is_logged_in ){
   }
 }
 
-function findCurrentWorkspacesWithOrdering( ordering, workspaces, banned ){
+function getCurrentWorkspacesWithOrdering( ordering, workspaces, banned ){
   // TODO: Fix the fuckup that is the fact that workspaces acesses via . and
   //    ordering and banned access via ['']
   // TODO: This is ridiculously slow and I hate it
@@ -270,7 +270,7 @@ function retrieveWorkspaces( url, title, selected_text, fav_url ){
           // workplace.indexOf(workspace);
         }
 
-        workspaces = findCurrentWorkspacesWithOrdering( result.workspace_ordering, workspaces, result.banned_workspaces );
+        workspaces = getCurrentWorkspacesWithOrdering( result.workspace_ordering, workspaces, result.banned_workspaces );
 
         chrome.storage.sync.set({'current_workspaces': result.current_workspaces}, function(){
           chrome.storage.sync.set({'workspace_ordering': result.workspace_ordering}, function() {
@@ -438,7 +438,7 @@ function newTask( element ){
   }
 
   $('#ws' + workspaceID).prepend( "<li id='" + random_id.toString() +
-      "' class='ls'><button class=\"donetask\"></button>" +
+      "' class='ls'><button class=\"donetask\" disabled=true></button>" +
       "<a class='n' href=\"#/\">" + newtask.name + "</a></li>" );
   // Should grey out and inactivate the button so that it cannot be clicked.
   // TODO: Add faded grey color.
@@ -457,9 +457,11 @@ function newTask( element ){
         if( t.name == newtask.name ) {
           // TODO: Resets IDs, probably not best architecture for such a thing!!!
           // Probably shoudl have parent div house the actual ID. Better architecture.
-          document.getElementById( random_id.toString() ).id = 'task' + t.id;
+          var taskID = 'task' + t.id;
+          document.getElementById( random_id.toString() ).id = taskID;
           // TODO: Isolate to only specific button instance, not all .donetask buttons
-          $(".donetask").off().on( 'click', function(){ markTaskDone(this); });
+          $("li#"+taskID+" button.donetask").prop("disabled", false);
+          $("li#"+taskID+" button.donetask").off().on( 'click', function(){ markTaskDone(this); });
         }
       }
     });
@@ -473,6 +475,7 @@ function enableSettingsModal(){
   // When the user clicks on the button, open the modal
   $('#settings_button').click(function() {
     // Could generate content here?
+    // TODO: Make more efficient by only deleting list content!!!
     $('.modal-body').empty();
 
     chrome.storage.sync.get(['current_workspaces', 'workspace_ordering', 'banned_workspaces'], function(result) {
@@ -487,7 +490,10 @@ function enableSettingsModal(){
         $('.modal').show();
       } else {
         // TODO: method does not work because workspaces isn't defined!!!
-        s_workspaces = findCurrentWorkspacesWithOrdering(result.workspace_ordering, workspaces, result.banned_workspaces);
+        // Includes IDs of workspaces, which is why this is super important.
+        // Well, result.workspace_ordering has ID and name as well!
+        // banned_workspaces has id and name as well!
+        // s_workspaces = getCurrentWorkspacesWithOrdering(result.workspace_ordering, workspaces, result.banned_workspaces);
 
         // Creates current workspaces list
         var current_container = document.createElement("DIV");
@@ -500,12 +506,15 @@ function enableSettingsModal(){
         var cw_list = document.createElement("UL");
         cw_list.id = 'm-cur-work-list';
         cw_list.class = 'modal-list';
-        for( let sw of s_workspaces ){
+        for( let sw of result.workspace_ordering ){
+          // Delete all banned_workspaces from this
+          if( result.banned_workspaces.some( e => e['id'] == sw['id'] ) )
+            continue;
           console.log("DEBUG: Modal generating workspace", sw.name);
           var li = document.createElement("LI");
-          li.setAttribute("id", 'm-c-ws' + sw.id);
+          li.setAttribute("id", 'm-c-ws' + sw['id']);
           li.setAttribute("class", 'modal-list-item');
-          li.appendChild(document.createTextNode(sw.name));
+          li.appendChild(document.createTextNode(sw['name']));
           cw_list.appendChild( li );
         }
         current_container.appendChild(current_workspaces_header);
