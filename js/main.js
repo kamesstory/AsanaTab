@@ -185,7 +185,7 @@ function getCurrentWorkspacesWithOrdering( ordering, workspaces, banned ){
   // TODO: What the heck is a local variable and which is a global? FIX PLEASE!
   console.log('This is the ordering for workspace_ordering:');
   for( let wo of ordering ){
-    console.log( "Workspace id " + wo['id'] + " with name " + wo['name'] + " has index " + wo['index'] + ".");
+    console.log( "%c Workspace id " + wo['id'] + " with name " + wo['name'] + " has index " + wo['index'] + ".", 'background: #222; color: #bada55');
     for( let i = 0; i < workspaces.length; i++ ){
       workspace = workspaces[i];
       if( workspace.id == wo['id'] ){
@@ -200,9 +200,14 @@ function getCurrentWorkspacesWithOrdering( ordering, workspaces, banned ){
 
   // TODO: Get ban to work correctly!
   for( let workspace of workspaces ){
-    if( banned.some(e => e['id'] == workspace.id) ){
-      workspaces.splice( workplace.indexOf(workspace), 1 );
+    console.log( "%c Workspace id " + workspace.id + " has name " + workspace.name + ".", 'background: #222; color: #55bada' );
+    if( banned.some(e => e.id == workspace.id) ){
+      workspaces.splice( workspaces.indexOf(workspace), 1 );
     }
+  }
+
+  for( let ban of banned ){
+    console.log( "%c Workspace id " + ban.id + " has name " + ban.name + ".", 'background: #222; color: #da55ba' );
   }
 
   return workspaces;
@@ -475,8 +480,9 @@ function enableSettingsModal(){
   // When the user clicks on the button, open the modal
   $('#settings_button').click(function() {
     // Could generate content here?
-    // TODO: Make more efficient by only deleting list content!!!
-    $('.modal-body').empty();
+    $('#settings_button').prop("disabled", true);
+    $('#m-cur-work-list').empty();
+    $('#m-ban-work-list').empty();
 
     chrome.storage.sync.get(['current_workspaces', 'workspace_ordering', 'banned_workspaces'], function(result) {
       if( result.current_workspaces == undefined || result.workspace_ordering == undefined ){
@@ -485,70 +491,114 @@ function enableSettingsModal(){
         error_header.appendChild( error_text );
 
         // Appends all this to the actual modal body
-        $('.modal-body').append(error_header);
+        $('.modal-all-workspaces-container').append(error_header);
 
         $('.modal').show();
       } else {
-        // TODO: method does not work because workspaces isn't defined!!!
-        // Includes IDs of workspaces, which is why this is super important.
-        // Well, result.workspace_ordering has ID and name as well!
-        // banned_workspaces has id and name as well!
-        // s_workspaces = getCurrentWorkspacesWithOrdering(result.workspace_ordering, workspaces, result.banned_workspaces);
-
         // Creates current workspaces list
-        var current_container = document.createElement("DIV");
-        current_container.setAttribute("display", "inline-block");
-        var current_workspaces_header = document.createElement("H2");
-        current_workspaces_header.setAttribute("class", 'modal-list-header');
-        var cwh_text = document.createTextNode("My Current Workspaces");
-        current_workspaces_header.appendChild( cwh_text );
-
-        var cw_list = document.createElement("UL");
-        cw_list.id = 'm-cur-work-list';
-        cw_list.class = 'modal-list';
         for( let sw of result.workspace_ordering ){
           // Delete all banned_workspaces from this
           if( result.banned_workspaces.some( e => e['id'] == sw['id'] ) )
             continue;
           console.log("DEBUG: Modal generating workspace", sw.name);
           var li = document.createElement("LI");
+          var checkboxContainer = document.createElement("LABEL");
+          checkboxContainer.setAttribute("class", 'modal-ws-checkbox');
+          var checkbox = document.createElement("INPUT");
+          checkbox.setAttribute("type", 'checkbox');
+          var checkmark = document.createElement("SPAN");
+          checkmark.setAttribute("class", "checkmark");
           li.setAttribute("id", 'm-c-ws' + sw['id']);
           li.setAttribute("class", 'modal-list-item');
-          li.appendChild(document.createTextNode(sw['name']));
-          cw_list.appendChild( li );
+          checkboxContainer.appendChild(checkbox);
+          checkboxContainer.appendChild(checkmark);
+          li.appendChild(checkboxContainer);
+          var workspaceName = document.createElement("A");
+          workspaceName.appendChild(document.createTextNode(sw['name']));
+          li.appendChild(workspaceName);
+          $('#m-cur-work-list').append( li );
         }
-        current_container.appendChild(current_workspaces_header);
-        current_container.appendChild(cw_list);
 
         // Creates banned workspaces list
-        var banned_container = document.createElement("DIV");
-        banned_container.setAttribute("display", "inline-block");
-        var banned_workspaces_header = document.createElement("H2");
-        banned_workspaces_header.setAttribute("class", 'modal-list-header');
-        var bwh_text = document.createTextNode("Banned Workspaces");
-        banned_workspaces_header.appendChild( bwh_text );
-
-        var bw_list = document.createElement("UL");
-        bw_list.id = 'm-ban-work-list';
-        bw_list.class = 'modal-list';
         for( let bw of result.banned_workspaces ){
           console.log("DEBUG: Modal generating banned workspace", bw.name);
           var li = document.createElement("LI");
+          var checkboxContainer = document.createElement("LABEL");
+          checkboxContainer.setAttribute("class", 'modal-ws-checkbox');
+          var checkbox = document.createElement("INPUT");
+          checkbox.setAttribute("type", 'checkbox');
+          var checkmark = document.createElement("SPAN");
+          checkmark.setAttribute("class", "checkmark");
           li.setAttribute("id", 'm-b-ws' + bw['id']);
           li.setAttribute("class", 'modal-list-item');
-          li.appendChild(document.createTextNode(bw['name']));
-          bw_list.appendChild( li );
+          checkboxContainer.appendChild(checkbox);
+          checkboxContainer.appendChild(checkmark);
+          li.appendChild(checkboxContainer);
+          var workspaceName = document.createElement("A");
+          workspaceName.appendChild(document.createTextNode(bw['name']));
+          li.appendChild(workspaceName);
+          $('#m-ban-work-list').append( li );
         }
-        banned_container.appendChild(banned_workspaces_header);
-        banned_container.appendChild(bw_list);
-
-        // Appends all this to the actual modal body
-        $('.modal-body').append(current_container);
-        $('.modal-body').append(banned_container);
 
         // NOW, we can show the modal!
         $('.modal').show();
       }
+    });
+  });
+
+  // Inside LI are checkboxContainer
+  // Inside checkboxContainer is checkbox (input) which is checked or not
+  // If checked, then take the li's ID - prefix 'm-b-ws' and add to banned
+  // Delete that li item.
+  $('#bub-ban').click(function() {
+    chrome.storage.sync.get('banned_workspaces', function(result) {
+      var children = $('#m-cur-work-list').children("LI");
+      var ws_to_ban = [];
+      // Inside UL are LI
+      for( let child of children ){
+        if( child.getElementsByTagName("INPUT")[0].checked ){
+          var checkedWorkspace = child.getElementsByTagName("A")[0].innerHTML;
+          child.getElementsByTagName("INPUT")[0].checked = false;
+          console.log("CHECK:", checkedWorkspace, "IS CHECKED!");
+
+          result.banned_workspaces.push({'name': checkedWorkspace, 'id': child.id.substring(6, child.id.length)});
+
+          document.getElementById('m-cur-work-list').removeChild(child);
+          $('#m-ban-work-list').append( child );
+        }
+      }
+      // Add the ids and names to the banned_workspaces list!
+      chrome.storage.sync.set({'banned_workspaces': result.banned_workspaces}, function(result){
+        // TODO: Deactivate all modal inputs and buttons until storage syncs properly.
+        console.log("DEBUG: Banned workspaces added to the storage!");
+      });
+    });
+  });
+
+  $('#bub-unban').click(function() {
+    chrome.storage.sync.get('banned_workspaces', function(result) {
+      var children = $('#m-ban-work-list').children("LI");
+      var ws_to_unban = [];
+      // Inside UL are LI
+      for( let child of children ){
+        if( child.getElementsByTagName("INPUT")[0].checked ){
+          var checkedWorkspace = child.getElementsByTagName("A")[0].innerHTML;
+          child.getElementsByTagName("INPUT")[0].checked = false;
+          console.log("CHECK:", checkedWorkspace, "IS CHECKED!");
+
+          // Unban this thing!
+          var index = result.banned_workspaces.findIndex(ws => ws.id == child.id.substring(6, child.id.length));
+          result.banned_workspaces.splice(index, 1);
+
+          document.getElementById('m-ban-work-list').removeChild(child);
+          $('#m-cur-work-list').append( child );
+        }
+      }
+      // Delete the ids and names from the banned_workspaces list!
+      chrome.storage.sync.set({'banned_workspaces': result.banned_workspaces}, function(result){
+        // TODO: Deactivate all modal inputs and buttons until storage syncs properly.
+        console.log("DEBUG: Selected items deleted from the storage!");
+      });
     });
   });
 
@@ -559,6 +609,7 @@ function enableSettingsModal(){
   // When the user clicks on <span> (x), close the modal
   $('#modal-close').click(function() {
       $('.modal').hide();
+      $('#settings_button').prop("disabled", false);
   });
 }
 
