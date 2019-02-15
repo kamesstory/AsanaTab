@@ -1,10 +1,29 @@
 @import "compass/css3";
 
+#main_container {
+  width: 80%;
+  margin: 10%;
+  position: relative;
+  background: transparent;
+}
+
+#main_container .workspace_container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1vh 0 2vh 0;
+  margin: 3vh;
+  -webkit-animation-name: animatebottom;
+  -webkit-animation-duration: 1s;
+  animation-name: animatebottom;
+  animation-duration: 1s;
+  background: #FBFBFB;
+}
+
 h2.ls {
   font-family: 'Ubuntu';
   font-size: 20px;
-  margin-top: 20px;
-  margin-bottom: 5px;
+  margin: 3vh 2vw 1vh 2vw;
   padding: 0;
 }
 
@@ -16,11 +35,11 @@ ul.ls {
 
 li.ls {
   border-bottom: 1px solid #ccc;
-  padding: 0.5px;
-}
-
-li.ls #notasks{
-
+  display: flex;
+  align-items: center;
+  height: auto;
+  justify-content: flex-start;
+  flex-direction: row;
 }
 
 li.ls:last-child {
@@ -28,46 +47,25 @@ li.ls:last-child {
 }
 
 li.ls:hover {
-  background: #F3F3F7;
-}
-
-li.ls a.n {
-  position: absolute;
-  padding: 10px 0px 10px 1.5px;
-  text-decoration: none;
-  font-family: 'PT Sans', serif;
-  font-size: 14px;
-  color: #000;
-  display: inline;
-  width: 75%;
-}
-
-li.ls a.duedate {
-  position: absolute;
-  right: 0px;
-  padding: 10px 0px 10px 0px;
-  text-decoration: none;
-  font-family: 'PT Sans', serif;
-  font-size: 14px;
-  color: #000;
-  display: inline;
-  width: 22.5%;
+  background: #F5F5F7;
 }
 
 li.ls button.donetask{
+  order: 1;
   background: url( "/assets/checkmark.png" ) no-repeat;
   background-size: 100%;
-  cursor: pointer;
   border: none;
-  margin: 5px;
-  width: 27px;
-  height: 27px;
-  display: inline;
+  margin: 0.75vh;
+  margin-left: 2vw;
+  width: 4.9vh;
+  min-width: 4.9vh;
+  height: 4.9vh;
 }
 
-li.ls button.donetask:hover {
+li.ls button.donetask:hover:enabled {
   background: url( "/assets/checkmark_filled.png" ) no-repeat;
   background-size: 100%;
+  cursor: pointer;
   outline: none;
   border-color: transparent;
   border: none; /*
@@ -83,23 +81,57 @@ li.ls button.donetask:focus {
   border: none;
 }
 
-li.ls2 {}
+li.ls a.n {
+  order: 2;
+  text-decoration: none;
+  cursor: default;
+  font-family: 'PT Sans', serif;
+  font-size: 14px;
+  padding: 0 0.2vw;
+  color: #000;
+  width: auto;
+}
 
-li.ls2 input.newadd {
-  width: 72.5%;
-  border: none;
-  border-color: transparent;
-  outline: none;
-  padding:10px 0px 10px 20px;
+li.ls a.duedate {
+  position: absolute;
+  right: 0px;
+  padding: 10px 0px 10px 0px;
   text-decoration: none;
   font-family: 'PT Sans', serif;
   font-size: 14px;
+  color: #000;
   display: inline;
+  width: 22.5%;
+}
+
+li#notasks{
+  pointer-events: none;
+}
+
+li#notasks a.notasks {
+  order: 2;
+  text-decoration: none;
+  font-family: 'PT Sans', serif;
+  font-size: 14px;
+  padding: 1.5vh 2vw;
+  color: #000;
+  width: auto;
+}
+
+li.ls input.newadd {
+  border: none;
+  border-color: transparent;
+  outline: none;
+  padding: 1.5vh 0 1.5vh 2.5vw;
+  text-decoration: none;
+  font-family: 'PT Sans', serif;
+  font-size: 14px;
+  flex-basis: 100%;
   cursor: text;
   background: #FBFBFB;
 }
 
-li.ls2 div {
+li.ls div {
   position: absolute;
   right: 0px;
   padding-top: 10px;
@@ -110,7 +142,7 @@ li.ls2 div {
   width: 25%;
 }
 
-li.ls2 a.in {
+li.ls a.in {
   padding-right: 5px;
   text-decoration: none;
   font-family: 'PT Sans', serif;
@@ -120,7 +152,7 @@ li.ls2 a.in {
   cursor: default;
 }
 
-li.ls2 input.dateinput {
+li.ls input.dateinput {
   border: none;
   border-color: transparent;
   outline: none;

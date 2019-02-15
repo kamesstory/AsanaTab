@@ -1,0 +1,309 @@
+@import url(https://fonts.googleapis.com/css?family=Inconsolata:400,700);
+
+* {
+  margin:0;
+  padding:0;
+  font-family: 'Inconsolata';
+  color:#333333;
+}
+
+html {
+  background: url("/assets/unsplash3.jpg") no-repeat 0 -55vh fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  height: 100%;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.title {
+  font-family: 'Ubuntu';
+  font-size: 40px;
+  margin-bottom: 0.85%;
+  margin-top: 1.25%;
+  color: #F6F6EC;
+}
+
+.mainbody {
+  font-family: 'Cardo';
+  font-size: 16px;
+  /* color: #EEEEEE; */
+}
+
+.center {
+  text-align: center;
+  height: 15%;
+  position: absolute;
+  z-index: 999;
+  width: 100%;
+  background: rgba(255,255,255,0.0);
+  border-bottom: 2px black;
+  cursor: default;
+}
+
+.action_buttons_dock {
+  position: fixed;
+  z-index: 999;
+  width: 100%;
+  background: rgba(255,255,255,0.0);
+  cursor: default;
+  bottom: 2vh;
+}
+
+.action_buttons_dock #feedback_button {
+  background: url("/assets/love.png") center no-repeat;
+  background-size: auto 100%;
+  float: left;
+  border: 0px;
+  width: 4vw;
+  height: 4vh;
+  cursor: pointer;
+  outline: none;
+}
+
+.action_buttons_dock #settings_button {
+  background: url("/assets/settings.png") center no-repeat;
+  background-size: auto 100%;
+  float: right;
+  border: 0px;
+  width: 4vw;
+  height: 4vh;
+  cursor: pointer;
+  outline: none;
+}
+
+.fixed-bg {
+  height: 75vh;
+}
+
+.fixed-bg .main_clock_div{
+  position: absolute;
+  top: 46.5%;
+  left: 51%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: transparent;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.main_clock_div #main_clock {
+  display: inline;
+  background-color: transparent;
+  color: #FFFFEE;
+  font-size: 90px;
+  font-family: 'Lato';
+  /*text-shadow: 0px 0.1px 2px black;*/
+  margin: 0.2vw;
+  cursor: default;
+  text-align: center;
+}
+
+.main_clock_div #main_clock_ampm {
+  display: inline;
+  background-color: transparent;
+  color: #FFFFEE;
+  font-size: 30px;
+  font-family: 'Lato';
+  /*text-shadow: 0px 0.1px 2px black;*/
+  cursor: default;
+  text-align: center;
+}
+
+.fixed-bg #main_date {
+  position: absolute;
+  color: #FFFFEE;
+  top: 56%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: transparent;
+  font-size: 20px;
+  font-family: 'Lato';
+  /*text-shadow: 0px 0.1px 2px black;*/
+  padding: 12px 24px;
+  cursor: default;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.fixed-bg .openasana_button {
+  position: absolute;
+  top: 75%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: transparent;
+  border: 2px solid #F6F6EC;
+  color: #F6F6EC;
+  font-size: 16px;
+  padding: 12px 24px;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: center;
+  display: none;
+}
+
+.fixed-bg .openasana_button:focus {
+  outline: none;
+}
+
+/* -------------- MODAL CONTENT -------------- */
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  padding-top: 10vh;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Header */
+.modal-header {
+  font-family: 'Ubuntu';
+  font-size: 25px;
+  padding: 2vh 3vw;
+  background-color: white;
+  color: white;
+}
+
+/* Modal Body */
+.modal-body {
+  padding: 2px 16px;
+  display: inline-block;
+}
+
+/* Modal Footer */
+.modal-footer {
+    padding: 1vh 2vw;
+    background-color: white;
+    color: white;
+    margin: auto;
+    text-align: center;
+}
+
+/* Modal Content */
+.modal-content {
+  text-decoration: none;
+  font-family: 'PT Sans', serif;
+  font-size: 14px;
+  position: relative;
+  background-color: #fefefe;
+  margin: auto;
+  padding-left: 5vw;
+  padding-right: 5vw;
+  padding-top: 5vh;
+  padding-bottom: 5vh;
+  width: 60%;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+  animation-name: animatetop;
+  animation-duration: 0.4s;
+}
+
+.modal-list-header{
+  text-decoration: none;
+  padding: 3vh 0;
+  font-family: 'PT Sans', serif;
+  font-size: 20px;
+}
+
+.modal-list {
+  text-decoration: none;
+  font-family: 'PT Sans', serif;
+  font-size: 14px;
+}
+
+.modal-list-item {
+  text-decoration: none;
+  font-family: 'PT Sans', serif;
+  font-size: 14px;
+}
+
+#modal-close {
+  background-color: transparent;
+  border: 2px solid #545467;
+  color: #545467;
+  font-size: 16px;
+  width: 7vw;
+  height: 7vh;
+  margin-right: 5vw;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: center;
+}
+
+#modal-close:focus {
+  outline: none;
+}
+
+#modal-save {
+  background-color: transparent;
+  border: 2px solid #545467;
+  color: #545467;
+  font-size: 16px;
+  width: 7vw;
+  height: 7vh;
+  margin-left: 5vw;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: center;
+}
+
+#modal-save:focus {
+  outline: none;
+}
+
+/* Add Animation */
+@keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 0; opacity: 1}
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* -------------- ANIMATIONS -------------- */
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 }
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom {
+  from{ bottom:-100px; opacity:0 }
+  to{ bottom:0; opacity:1 }
+}
+
+@-webkit-keyframes fadeOut {
+  from { opacity:1 }
+  to { opacity:0 }
+}
+
+@keyframes fadeOut {
+  from{ opacity:1 }
+  to{ opacity:0 }
+}

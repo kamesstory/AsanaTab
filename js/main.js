@@ -292,6 +292,7 @@ function compareWorkspaces(a, b){
 function open_workspaces(){
   // console.log( "Workspaces are being opened on account of button click." );
   $('.openasana_button').text( 'Loading...' );
+  $('.openasana_button').off();
   $('#loaderdiv').show();
   $('.workspace_container').show();
   retrieveWorkspaces( "chrome://newtab/", 'new tab - Asana', '', '' );
@@ -335,7 +336,7 @@ function getTasksFromWorkspace( w ){
 
   ServerManager.tasks( w.id, function(tasks) {
     if( tasks.length == 0 ){
-      addNoTasksMessage( w );
+      addNoTasksMessage( '#ws' + w.id, w.name );
     } else {
       tasks_for_workspace[ w.id ] = tasks;
       console.log( "Tasks for workspace " + w.id + " successfully retrieved: " + tasks );
@@ -349,20 +350,20 @@ function getTasksFromWorkspace( w ){
         $('#ws' + w.id).append( "<li id='task" + t.id + "' class='ls'><button class=\"donetask\"></button>" +
             "<a class='n' href=\"#/\">" + t.name + "</a></li>" );
       }
-      // $('#ws' + w.id).append( "<li class='ls2'>" +
+      // $('#ws' + w.id).append( "<li class='ls'>" +
       //   "<input type=\"text\" class='newadd' href=\"#/\" placeholder=\"Type here to add a new task.\">" +
       //   "<div><a class='in' href=\"#/\">Date Due:</a><input class='dateinput' type='date'></div></li>" );
       $(".donetask").off().on( 'click', function(){ markTaskDone(this); });
     }
-    $('#ws' + w.id).append( "<li class='ls2'>" +
+    $('#ws' + w.id).append( "<li class='ls'>" +
       "<input type=\"text\" class='newadd' href=\"#/\" placeholder=\"Type here to add a new task.\">");
     $(".newadd").off().on( 'change', function(){ newTask(this); });
   });
 }
 
-function addNoTasksMessage( w ){
-  $('#ws' + w.id).prepend( "<li class='ls' id='notasks'><a class='newadd' href=\"#/\">" +
-    'You currently have no tasks for ' + w.name + '!' + "</a></li>" );
+function addNoTasksMessage( workspace_id, workspace_name ){
+  $(workspace_id).prepend( "<li class='ls' id='notasks'><a class='notasks' href=\"#/\">" +
+    'Congratulations! You are finished with all tasks for ' + workspace_name + '!' + "</a></li>" );
 }
 
 function markTaskDone( element ){
@@ -390,8 +391,9 @@ function markTaskDone( element ){
   });
 
   unorderedlist.removeChild(element.parentElement);
-  if( unorderedlist.length <= 1 ){
-    addNoTasksMessage(unorderedlist);
+  console.log( "Unordered Lists's children are: ", unorderedlist.children.length );
+  if( unorderedlist.children.length <= 1 ){
+    addNoTasksMessage('#'+unorderedlist.id, unorderedlist.parentElement.firstChild.innerHTML);
   }
 }
 
@@ -429,8 +431,10 @@ function newTask( element ){
   //     "<a class='n' href=\"#/\">" + newtask.name + "</a><a class='duedate'>Due " + date_due + "</a></li>" );
 
   // Before adding new task, you must FIRST destroy any "no tasks available" sign that exists.
-  if( $('#ws' + workspaceID).length == 2 && $('#ws' + workspaceID + ' li').first().attr('id') == 'notasks' ){
-    $('#ws' + workspaceID + ' li').first().remove();
+  if( $('#ws' + workspaceID).children().length == 2 ){
+    if( $('#ws' + workspaceID + ' li').first().attr('id') == 'notasks' ){
+      $('#ws' + workspaceID + ' li').first().remove();
+    }
   }
 
   $('#ws' + workspaceID).prepend( "<li id='" + random_id.toString() +
