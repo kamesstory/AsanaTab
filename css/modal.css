@@ -151,24 +151,21 @@ button#modal-clear-local-storage:hover:enabled {
   justify-content: flex-start;
 }
 
-.modal-list-item a {
-  font-family: 'PT Sans', serif;
-  font-size: 16px;
-}
-
 /* ---------------------------------------------------- */
 /*                    MODAL CHECKBOX                    */
 /* ---------------------------------------------------- */
 
 label.modal-ws-checkbox {
+  font-family: 'PT Sans', serif;
+  font-size: 16px;
+  text-decoration: none;
   display: block;
   position: relative;
   padding-left: 35px;
-  margin-bottom: 12px;
-  height: 25px;
-  width: 25px;
+  margin-bottom: 10px;
+  height: 4.25vh;
+  min-width: 4.25vh;
   cursor: pointer;
-  font-size: 22px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -188,8 +185,8 @@ label.modal-ws-checkbox input {
   position: absolute;
   top: 0;
   left: 0;
-  height: 25px;
-  width: 25px;
+  height: 4.25vh;
+  width: 4.25vh;
   background-color: #eee;
 }
 
@@ -217,10 +214,10 @@ label.modal-ws-checkbox input:checked ~ .checkmark:after {
 
 /* Style the checkmark/indicator */
 label.modal-ws-checkbox .checkmark:after {
-  left: 9px;
-  top: 5px;
-  width: 5px;
-  height: 10px;
+  left: 1.5vh;
+  top: .69vh;
+  width: 1vh;
+  height: 2vh;
   border: solid white;
   border-width: 0 3px 3px 0;
   -webkit-transform: rotate(45deg);
