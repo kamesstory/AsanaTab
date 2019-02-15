@@ -229,6 +229,16 @@ ServerManager = {
   // WHY THE HECK IS RESPONSE UNDEFINED MOTHER OF GOD
   _makeCallback: function(response, callback, errback) {
     // console.log( "_makeCallback method has been entered." );
+    if( response === undefined ){
+      // Send a message that there was an error!
+      var notifOptions = {
+        type: 'basic',
+        iconUrl: '/assets/icon128.png',
+        title: 'AsanaTabs Error',
+        message: "Could not connect to Asana API."
+      };
+      sendNotification( 'AsanaError', notifOptions, function(){} );
+    }
     if (response.errors) {
       console.log( 'ERROR on _makeCallback of server_mngr.js' );
       (errback || this.onError).call(null, response);

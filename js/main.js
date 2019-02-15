@@ -67,6 +67,7 @@ $(document).ready(function() {
   startTime();
   startDate();
   enableSettingsModal();
+  enableFeedbackButton();
 
   chrome.tabs.query({
     active: true,
@@ -74,9 +75,12 @@ $(document).ready(function() {
   }, function(tabs) {
     tab = tabs[0];
     // Now load our options ...
+    console.time("ServerManager.options");
     ServerManager.options(function(options) {
+      console.timeEnd("ServerManager.options");
       me.options = options;
       // And ensure the user is logged in ...
+      console.time("ServerManager.isLoggedIn");
       ServerManager.isLoggedIn( onCheckLogin );
     });
   });
@@ -160,6 +164,7 @@ function checkTime(i) {
 }
 
 function onCheckLogin( is_logged_in ){
+  console.timeEnd("ServerManager.isLoggedIn");
   if( is_logged_in ){
     // console.log( "Successful login or login check to Asana." );
 
@@ -220,19 +225,25 @@ function retrieveWorkspaces( url, title, selected_text, fav_url ){
   page_selection = selected_text;
   favicon_url = fav_url;
 
+  console.time("ServerManager.me");
   ServerManager.me( function(user) {
+    console.timeEnd("ServerManager.me");
     user_id = user.id;
     user_name = user.name;
 
     // Creates workspaces here
+    console.time("ServerManager.workspaces");
     ServerManager.workspaces( function(ws){
+      console.timeEnd("ServerManager.workspaces");
       workspaces = ws;
       // TODO: Nest all log messages underneath one debug function with input-able message.
       console.log( "Length of workspaces: " + workspaces.length );
 
       // TODO: Introduce workspace sorting based on user preferences
+      console.time("ServerManager.workspaces' storage sync get");
       chrome.storage.sync.get(['current_workspaces', 'workspace_ordering', 'banned_workspaces'], function(result) {
         // Just always save everything back, since there are sync problems
+        console.timeEnd("ServerManager.workspaces' storage sync get");
 
         // Do requisite checks for empty storage
         var workspace;
@@ -278,8 +289,10 @@ function retrieveWorkspaces( url, title, selected_text, fav_url ){
 
         workspaces = getCurrentWorkspacesWithOrdering( result.workspace_ordering, workspaces, result.banned_workspaces );
 
+        console.time("ServerManager.workspaces' storage sync set");
         chrome.storage.sync.set({'current_workspaces': result.current_workspaces}, function(){
-          chrome.storage.sync.set({'workspace_ordering': result.workspace_ordering}, function() {
+          chrome.storage.sync.set({'workspace_ordering': result.workspace_ordering}, function(){
+            console.timeEnd("ServerManager.workspaces' storage sync set");
             console.log("Workspace ordering and current workspaces saved in local storage!");
             // workspaces.sort( compareWorkspaces );
 
@@ -312,6 +325,7 @@ function displayTasks(){
   $('.openasana_button').prop( 'disabled', true );
   $('.openasana_button').css('cursor','default');
 
+  // TODO: Try mapping functionality!
   for( let w of workspaces ){
     console.log( "The workspace " + w.name + " has been called for." );
     // Creates a <div class='workspace_container'> and
@@ -340,7 +354,10 @@ function displayTasks(){
 function getTasksFromWorkspace( w ){
   var me = this;
 
+  var workspace_time_message = "ServerManager.tasks for workspace" + w.name;
+  console.time(workspace_time_message);
   ServerManager.tasks( w.id, function(tasks) {
+    console.timeEnd(workspace_time_message);
     if( tasks.length == 0 ){
       addNoTasksMessage( '#ws' + w.id, w.name );
     } else {
@@ -487,12 +504,17 @@ function enableSettingsModal(){
 
     chrome.storage.sync.get(['current_workspaces', 'workspace_ordering', 'banned_workspaces'], function(result) {
       if( result.current_workspaces == undefined || result.workspace_ordering == undefined ){
-        var error_header = document.createElement("H2");
-        var error_text = document.createTextNode("No workspaces have been saved to storage! Error.");
-        error_header.appendChild( error_text );
+        var li = document.createElement("LI");
+        li.setAttribute("class", 'modal-list-item');
+        li.appendChild(document.createTextNode("No workspaces have been saved to storage! Error."));
+
+        var li2 = document.createElement("LI");
+        li2.setAttribute("class", 'modal-list-item');
+        li2.appendChild(document.createTextNode("No workspaces have been saved to storage! Error."));
 
         // Appends all this to the actual modal body
-        $('.modal-all-workspaces-container').append(error_header);
+        $('#m-cur-work-list').append(li);
+        $('#m-ban-work-list').append(li2);
 
         $('.modal').show();
       } else {
@@ -603,6 +625,13 @@ function enableSettingsModal(){
     });
   });
 
+  $('#modal-clear-local-storage').click( function() {
+    chrome.storage.sync.clear(function(){
+      console.log( "All local storage has been cleared!");
+      $('#label-for-cls').text("All local storage has been cleared!");
+    });
+  });
+
   $('.modal').on('shown', function () {
     $('.modal-header').focus();
   })
@@ -611,6 +640,17 @@ function enableSettingsModal(){
   $('#modal-close').click(function() {
       $('.modal').hide();
       $('#settings_button').prop("disabled", false);
+  });
+}
+
+function enableFeedbackButton() {
+  $('#feedback_button').click( () => {
+
+    var email = "jason.haofeng.wang@gmail.com";
+    var mailto_link = 'mailto:' + email + "?&subject=" + escape("Feedback about AsanaTabs");
+    window = window.open( mailto_link, 'emailWindow' );
+    if (window && window.open && !window.closed)
+      window.close();
   });
 }
 

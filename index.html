@@ -41,7 +41,6 @@
       <!-- FEEDBACK-RELATED BUTTONS & OPTIONS -->
 
       <div class='action_buttons_dock'>
-      	<!-- <input type="submit" value="" id='feedback_button'></input> -->
         <input type="submit" value="" id='settings_button'></input>
       </div>
     </div>
@@ -51,6 +50,16 @@
 		  <div class="modal-content">
 		    <div class="modal-header">
 			    <h2>Settings</h2>
+          <div class="modal-cls-container">
+            <label id="label-for-cls" for="modal-clear-local-storage">
+              Clear Local Storage!
+            </label>
+            <button id="modal-clear-local-storage"></button>
+            <label id="label-for-feedback" for-"feedback_button">
+              Feedback:
+            </label>
+            <input type="submit" value="" id='feedback_button'></input>
+          </div>
 			  </div>
 			  <div class="modal-body">
           <div class="modal-all-workspaces-container">
@@ -68,7 +77,7 @@
 			  </div>
 			  <div class="modal-footer">
 			    <button id="modal-close">Close</button>
-          <button id="modal-save">Save</button>
+          <!-- <button id="modal-save">Save</button> -->
 			  </div>
 		  </div>
 		</div>

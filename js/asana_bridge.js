@@ -68,7 +68,7 @@ AsanaBridge = {
     // API request.
     if (!me.is_server) {
       console.log( "We are not the server page!" );
-      console.info("Client API Request", http_method, path, params);
+      console.info("SENT: Client API Request", http_method, path, params);
       chrome.runtime.sendMessage({
         type: "api",
         method: http_method,

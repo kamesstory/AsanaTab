@@ -41,9 +41,66 @@
 .modal-header {
   font-family: 'Ubuntu';
   font-size: 25px;
-  padding: 2vh 3vw;
+  padding: 2vh 1vw 2vh 3vw;
   background-color: white;
   color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+div.modal-cls-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#label-for-cls {
+  font-family: 'Ubuntu';
+  font-size: 14px;
+  pointer-events: none;
+}
+
+button#modal-clear-local-storage {
+  order: 1;
+  background: url( "/assets/trash.png" ) no-repeat;
+  background-size: 100%;
+  border: none;
+  margin-left: .5vw;
+  width: 3.5vh;
+  min-width: 3.5vh;
+  height: 3.5vh;
+  outline: none;
+}
+
+button#modal-clear-local-storage:hover:enabled {
+  background: url( "/assets/trash_hover.png" ) no-repeat;
+  background-size: 100%;
+  cursor: pointer;
+  outline: none;
+  border-color: transparent;
+  border: none;
+}
+
+#label-for-feedback {
+  order: 2;
+  font-family: 'Ubuntu';
+  font-size: 14px;
+  pointer-events: none;
+  margin-left: 2vw;
+}
+
+#feedback_button {
+  order: 2;
+  background: url("/assets/love.png") no-repeat;
+  background-size: 100%;
+  border: none;
+  width: 3.5vh;
+  min-width: 3.5vh;
+  height: 3.5vh;
+  margin-left: .5vw;
+  cursor: pointer;
+  outline: none;
 }
 
 /* ---------------------------------------------------- */
@@ -205,7 +262,7 @@ label.modal-ws-checkbox .checkmark:after {
   font-size: 16px;
   width: 7vw;
   height: 7vh;
-  margin-right: 5vw;
+  margin: 0 5vw;
   cursor: pointer;
   border-radius: 5px;
   text-align: center;

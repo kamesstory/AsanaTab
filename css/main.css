@@ -54,17 +54,6 @@ html {
   bottom: 2vh;
 }
 
-.action_buttons_dock #feedback_button {
-  background: url("/assets/love.png") center no-repeat;
-  background-size: auto 100%;
-  float: left;
-  border: 0px;
-  width: 4vw;
-  height: 4vh;
-  cursor: pointer;
-  outline: none;
-}
-
 .action_buttons_dock #settings_button {
   background: url("/assets/settings.png") center no-repeat;
   background-size: auto 100%;
