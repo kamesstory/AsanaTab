@@ -17,7 +17,7 @@ html {
 }
 
 ::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .title {
@@ -34,27 +34,25 @@ html {
   /* color: #EEEEEE; */
 }
 
-.center {
-  text-align: center;
-  height: 15%;
-  position: absolute;
-  z-index: 999;
-  width: 100%;
-  background: rgba(255,255,255,0.0);
-  border-bottom: 2px black;
-  cursor: default;
-}
-
 .fixed-bg {
   height: 75vh;
 }
 
-.fixed-bg .main_clock_div{
+.fixed-bg div.main_clock_and_date{
   position: absolute;
   top: 46.5%;
   left: 51%;
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
+  background-color: transparent;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.main_clock_and_date div.main_clock_div{
   background-color: transparent;
   cursor: pointer;
   border-radius: 5px;
@@ -85,17 +83,12 @@ html {
 }
 
 .fixed-bg #main_date {
-  position: absolute;
   color: #FFFFEE;
-  top: 56%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
   background-color: transparent;
   font-size: 20px;
   font-family: 'Lato';
   /*text-shadow: 0px 0.1px 2px black;*/
-  padding: 12px 24px;
+  padding: 0 24px;
   cursor: default;
   border-radius: 5px;
   text-align: center;
