@@ -57,9 +57,9 @@ li.ls button.donetask{
   border: none;
   margin: 0.75vh;
   margin-left: 2vw;
-  width: 4.9vh;
-  min-width: 4.9vh;
-  height: 4.9vh;
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
 }
 
 li.ls button.donetask:hover:enabled {

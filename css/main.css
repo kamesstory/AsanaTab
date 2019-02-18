@@ -45,26 +45,6 @@ html {
   cursor: default;
 }
 
-.action_buttons_dock {
-  position: fixed;
-  z-index: 999;
-  width: 100%;
-  background: rgba(255,255,255,0.0);
-  cursor: default;
-  bottom: 2vh;
-}
-
-.action_buttons_dock #settings_button {
-  background: url("/assets/settings.png") center no-repeat;
-  background-size: auto 100%;
-  float: right;
-  border: 0px;
-  width: 4vw;
-  height: 4vh;
-  cursor: pointer;
-  outline: none;
-}
-
 .fixed-bg {
   height: 75vh;
 }
@@ -139,6 +119,26 @@ html {
 }
 
 .fixed-bg .openasana_button:focus {
+  outline: none;
+}
+
+.action_buttons_dock {
+  position: fixed;
+  z-index: 999;
+  width: 100%;
+  background: rgba(255,255,255,0.0);
+  cursor: default;
+  bottom: 2vh;
+}
+
+.action_buttons_dock #settings_button {
+  background: url("/assets/settings.png") center no-repeat;
+  background-size: auto 100%;
+  float: right;
+  border: 0px;
+  width: 4vw;
+  height: 4vh;
+  cursor: pointer;
   outline: none;
 }
 

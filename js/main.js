@@ -48,7 +48,7 @@ $(document).ready(function() {
   // Our default error handler.
   ServerManager.onError = function(response) {
     // me.showError(response.errors[0].message);
-    onCheckLogin( false, "Error: please clear local storage and refresh.", true );
+    onCheckLogin( false, "error", false );
   };
 
   // This sets the click functionality for the opening button
@@ -84,7 +84,7 @@ $(document).ready(function() {
       chrome.storage.sync.get('user', (result) => {
         stored_user = result.user;
         if( stored_user == null || stored_user == undefined ){
-          onCheckLogin(false, "Undergoing set up...", true);
+          onCheckLogin(false, "undergoing set up...", true);
         }
         // And ensure the user is logged in ...
         ServerManager.isLoggedIn( onCheckLogin );
@@ -95,8 +95,10 @@ $(document).ready(function() {
           user_id = user.id;
           user_name = user.name;
           chrome.storage.sync.set({'user': {'id': user.id, 'name': user.name}});
-          if( stored_user == null )
-            onCheckLogin(false, "Set up complete! Please reload.", true);
+          if( stored_user == null ){
+            // TODO: Automatically reload here.
+            location.reload();
+          }
         });
       });
     });
@@ -181,31 +183,37 @@ function checkTime(i) {
 }
 
 function onCheckLogin( is_logged_in, message=null, unclickable=false ){
-  if( is_logged_in ){
+  $('.openasana_button').prop( 'disabled', unclickable );
+  if( unclickable )
+    $('.openasana_button').css('cursor','default');
+  else
+    $('.openasana_button').css('cursor','pointer');
+  if( is_logged_in )
     ServerManager.logEvent({ name: "ChromeExtension-New-Tab" });
-
-    $('.openasana_button').show();
-  }
   else {
+    $('.openasana_button').unbind( "click" );
+
     // If message is default:
     // The user is not even logged in. Prompt them to do so!
     if( message == null ){
       changeWelcome( "please log into your asana!" );
-      $('.openasana_button').unbind( "click" );
-      $('.openasana_button').show();
       $('.openasana_button').click(function(){
         window.open("https://asana.com/#login","_self")
       });
+    } else if( message == "error" ){
+      changeWelcome( "error: click here to reload." );
+      $('.openasana_button').click(function(){
+        $('.openasana_button').prop( 'disabled', unclickable );
+        changeWelcome( "clearing local storage..." );
+        chrome.storage.sync.clear(function(){
+          location.reload();
+        });
+      });
     } else {
       changeWelcome( message );
-      if( unclickable ){
-        $('.openasana_button').prop( 'disabled', true );
-        $('.openasana_button').css('cursor','default');
-      }
-      $('.openasana_button').unbind( "click" );
-      $('.openasana_button').show();
     }
   }
+  $('.openasana_button').show();
 }
 
 function getCurrentWorkspacesWithOrdering( ordering, workspaces, banned ){
@@ -251,7 +259,7 @@ function retrieveWorkspaces( url, title, selected_text, fav_url ){
     if( user_name == null )
       user_name = stored_user.name;
   } else {
-    onCheckLogin( false, "Error: please clear local storage and refresh.", true );
+    onCheckLogin( false, "error", false );
   }
 
   // Creates workspaces here
@@ -639,7 +647,7 @@ function enableSettingsModal(){
 
   $('.modal').on('shown', function () {
     $('.modal-header').focus();
-  })
+  });
 
   // When the user clicks on <span> (x), close the modal
   $('#modal-close').click(function() {
@@ -650,7 +658,6 @@ function enableSettingsModal(){
 
 function enableFeedbackButton() {
   $('#feedback_button').click( () => {
-
     var email = "jason.haofeng.wang@gmail.com";
     var mailto_link = 'mailto:' + email + "?&subject=" + escape("Feedback about AsanaTabs");
     window = window.open( mailto_link, 'emailWindow' );

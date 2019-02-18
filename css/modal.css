@@ -58,7 +58,7 @@ div.modal-cls-container {
 #label-for-cls {
   font-family: 'Ubuntu';
   font-size: 14px;
-  pointer-events: none;
+  cursor: pointer;
 }
 
 button#modal-clear-local-storage {
@@ -71,12 +71,12 @@ button#modal-clear-local-storage {
   min-width: 3.5vh;
   height: 3.5vh;
   outline: none;
+  cursor: pointer;
 }
 
 button#modal-clear-local-storage:hover:enabled {
   background: url( "/assets/trash_hover.png" ) no-repeat;
   background-size: 100%;
-  cursor: pointer;
   outline: none;
   border-color: transparent;
   border: none;
@@ -86,11 +86,11 @@ button#modal-clear-local-storage:hover:enabled {
   order: 2;
   font-family: 'Ubuntu';
   font-size: 14px;
-  pointer-events: none;
   margin-left: 2vw;
+  cursor: pointer;
 }
 
-#feedback_button {
+button#feedback_button {
   order: 2;
   background: url("/assets/love.png") no-repeat;
   background-size: 100%;
