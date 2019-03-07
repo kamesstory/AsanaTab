@@ -224,6 +224,8 @@ function getCurrentWorkspacesWithOrdering( ordering, workspaces, banned ){
   console.log('Workspace_ordering:');
   for( let wo of ordering ){
     console.log( "%c Workspace id " + wo['id'] + " with name " + wo['name'] + " has index " + wo['index'] + ".", 'background: #222; color: #bada55');
+    // TODO: Can do mapping for this, make index [i] the workspace. Create new workspace instead
+    //  of switching in place, that way no race conditions.
     for( let i = 0; i < workspaces.length; i++ ){
       workspace = workspaces[i];
       if( workspace.id == wo['id'] ){
