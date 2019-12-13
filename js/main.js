@@ -92,9 +92,10 @@ $(document).ready(function() {
         console.time("ServerManager.me");
         ServerManager.me( function(user) {
           console.timeEnd("ServerManager.me");
-          user_id = user.id;
+          console.log("Me is:", user.gid, user.name);
+          user_id = user.gid;
           user_name = user.name;
-          chrome.storage.sync.set({'user': {'id': user.id, 'name': user.name}});
+          chrome.storage.sync.set({'user': {'gid': user.gid, 'name': user.name}});
           if( stored_user == null ){
             // TODO: Automatically reload here.
             location.reload();
@@ -223,12 +224,12 @@ function getCurrentWorkspacesWithOrdering( ordering, workspaces, banned ){
   // TODO: What the heck is a local variable and which is a global? FIX PLEASE!
   console.log('Workspace_ordering:');
   for( let wo of ordering ){
-    console.log( "%c Workspace id " + wo['id'] + " with name " + wo['name'] + " has index " + wo['index'] + ".", 'background: #222; color: #bada55');
+    console.log( "%c Workspace gid " + wo['gid'] + " with name " + wo['name'] + " has index " + wo['index'] + ".", 'background: #222; color: #bada55');
     // TODO: Can do mapping for this, make index [i] the workspace. Create new workspace instead
     //  of switching in place, that way no race conditions.
     for( let i = 0; i < workspaces.length; i++ ){
       workspace = workspaces[i];
-      if( workspace.id == wo['id'] ){
+      if( workspace.gid == wo['gid'] ){
         // switch the location of the two
         destination_index = wo['index'];
         current_workspace = workspaces[destination_index];
@@ -241,11 +242,11 @@ function getCurrentWorkspacesWithOrdering( ordering, workspaces, banned ){
   // TODO: Get ban to work correctly!
   for( let i = workspaces.length-1; i >= 0; i-- ){
     let workspace = workspaces[i];
-    if( banned.some(e => e.id == workspace.id) ){
+    if( banned.some(e => e.gid == workspace.gid) ){
       workspaces.splice( workspaces.indexOf(workspace), 1 );
     }
   }
-
+  console.log("Workspaces after ordering", workspaces)
   return workspaces;
 }
 
@@ -257,7 +258,7 @@ function retrieveWorkspaces( url, title, selected_text, fav_url ){
 
   if( stored_user != null && stored_user != undefined ){
     if( user_id == null )
-      user_id = stored_user.id;
+      user_id = stored_user.gid;
     if( user_name == null )
       user_name = stored_user.name;
   } else {
@@ -270,6 +271,7 @@ function retrieveWorkspaces( url, title, selected_text, fav_url ){
   ServerManager.workspaces( function(ws){
     console.timeEnd("ServerManager.workspaces");
     workspaces = ws;
+    console.log("All workspaces right after retrieval:", workspaces);
     // TODO: Nest all log messages underneath one debug function with input-able message.
 
     // TODO: Introduce workspace sorting based on user preferences
@@ -298,7 +300,7 @@ function retrieveWorkspaces( url, title, selected_text, fav_url ){
         // Save workspace_ordering as tuple with {id, name}.
         for( let i = 0; i < workspaces.length; i++ ){
           workspace = workspaces[i];
-          result.workspace_ordering.push( {'id': workspace.id, 'name': workspace.name, 'index': i} );
+          result.workspace_ordering.push( {'gid': workspace.gid, 'name': workspace.name, 'index': i} );
           var test = result.workspace_ordering[result.workspace_ordering.length-1];
         }
       }
@@ -307,12 +309,12 @@ function retrieveWorkspaces( url, title, selected_text, fav_url ){
         // TODO: Need to find a way to update names of workspaces that have updated names!
         workspace = workspaces[i];
         // If there are workspaces not in current workspaces, add it
-        if( result.current_workspaces.some(e => e['id'] == workspace.id) == false ) {
-          result.current_workspaces.push( {'id': workspace.id, 'name': workspace.name} );
+        if( result.current_workspaces.some(e => e['gid'] == workspace.gid) == false ) {
+          result.current_workspaces.push( {'gid': workspace.gid, 'name': workspace.name} );
         }
         // If there are workspaces not in current workspaces, add it to end of workspace_ordering
-        if( result.workspace_ordering.some(e => e['id'] == workspace.id) == false ) {
-          result.workspace_ordering.push( {'id': workspace.id, 'name': workspace.name, 'index': result.workspace_ordering.length} );
+        if( result.workspace_ordering.some(e => e['gid'] == workspace.gid) == false ) {
+          result.workspace_ordering.push( {'gid': workspace.gid, 'name': workspace.name, 'index': result.workspace_ordering.length} );
         }
         // workplace.indexOf(workspace);
       }
@@ -320,6 +322,7 @@ function retrieveWorkspaces( url, title, selected_text, fav_url ){
       workspaces = getCurrentWorkspacesWithOrdering( result.workspace_ordering, workspaces, result.banned_workspaces );
 
       console.time("ServerManager.workspaces' storage sync set");
+      console.log("current workspaces are:", result.current_workspaces);
       chrome.storage.sync.set({'current_workspaces': result.current_workspaces}, function(){
         chrome.storage.sync.set({'workspace_ordering': result.workspace_ordering}, function(){
           console.timeEnd("ServerManager.workspaces' storage sync set");
@@ -359,7 +362,7 @@ function displayTasks(){
     // <ul id='ws' class='ls'> to go along with it
     var work_div = document.createElement("div");
     work_div.className = 'workspace_container';
-    work_div.id = 'wsc' + w.id;
+    work_div.id = 'wsc' + w.gid;
 
     var header = document.createElement("H2");
     var text = document.createTextNode( w.name );
@@ -367,7 +370,7 @@ function displayTasks(){
     header.appendChild( text );
 
     var unordered_list = document.createElement("UL");
-    unordered_list.id = 'ws' + w.id;
+    unordered_list.id = 'ws' + w.gid;
     unordered_list.className = 'ls';
 
     work_div.appendChild( header );
@@ -383,29 +386,23 @@ function getTasksFromWorkspace( w ){
 
   var workspace_time_message = "ServerManager.tasks for workspace" + w.name;
   console.time(workspace_time_message);
-  ServerManager.tasks( w.id, function(tasks) {
+  ServerManager.tasks( w.gid, function(tasks) {
     console.timeEnd(workspace_time_message);
     $('.openasana_button').text( 'Scroll down to see workspaces.' );
 
     if( tasks.length == 0 ){
-      addNoTasksMessage( '#ws' + w.id, w.name );
+      addNoTasksMessage( '#ws' + w.gid, w.name );
     } else {
-      tasks_for_workspace[ w.id ] = tasks;
+      tasks_for_workspace[ w.gid ] = tasks;
       // TODO: Fix Due Dates. These should be working as soon as possible!
       // var date_due;
       for( let t of tasks ){
-        // date_due = t.due_on;
-        // $('#ws' + w.id).append( "<li id='task" + t.id + "' class='ls'><button class=\"donetask\"></button>" +
-        //     "<a class='n' href=\"#/\">" + t.name + "</a><a class='duedate'>Due " + date_due + "</a></li>" );
-        $('#ws' + w.id).append( "<li id='task" + t.id + "' class='ls'><button class=\"donetask\"></button>" +
+        $('#ws' + w.gid).append( "<li id='task" + t.gid + "' class='ls'><button class=\"donetask\"></button>" +
             "<a class='n' href=\"#/\">" + t.name + "</a></li>" );
       }
-      // $('#ws' + w.id).append( "<li class='ls'>" +
-      //   "<input type=\"text\" class='newadd' href=\"#/\" placeholder=\"Type here to add a new task.\">" +
-      //   "<div><a class='in' href=\"#/\">Date Due:</a><input class='dateinput' type='date'></div></li>" );
       $(".donetask").off().on( 'click', function(){ markTaskDone(this); });
     }
-    $('#ws' + w.id).append( "<li class='ls'>" +
+    $('#ws' + w.gid).append( "<li class='ls'>" +
       "<input type=\"text\" class='newadd' href=\"#/\" placeholder=\"Type here to add a new task.\">");
     $(".newadd").off().on( 'change', function(){ newTask(this); });
   });
@@ -451,14 +448,14 @@ function newTask( element ){
   var random_id = generateRandomID();
   var newtask = {
     name: element.value,
-    assignee: { id: this.user_id, name: this.user_name }
+    assignee: { gid: this.user_id.toString(), name: this.user_name }
   };
 
   var workspaceID = element.parentElement.parentElement.id;
   workspaceID = workspaceID.substring( 2, workspaceID.length );
   var workspace_name = "";
   for( let w of me.workspaces ){
-    if( parseInt(w.id) == parseInt(workspaceID) )
+    if( parseInt(w.gid) == parseInt(workspaceID) )
       workspace_name = w.name;
   }
   var notifOptions = {
@@ -501,7 +498,7 @@ function newTask( element ){
         if( t.name == newtask.name ) {
           // TODO: Resets IDs, probably not best architecture for such a thing!!!
           // Probably shoudl have parent div house the actual ID. Better architecture.
-          var taskID = 'task' + t.id;
+          var taskID = 'task' + t.gid;
           document.getElementById( random_id.toString() ).id = taskID;
           // TODO: Isolate to only specific button instance, not all .donetask buttons
           $("li#"+taskID+" button.donetask").prop("disabled", false);
@@ -542,7 +539,7 @@ function enableSettingsModal(){
         // Creates current workspaces list
         for( let sw of result.workspace_ordering ){
           // Delete all banned_workspaces from this
-          if( result.banned_workspaces.some( e => e['id'] == sw['id'] ) )
+          if( result.banned_workspaces.some( e => e['gid'] == sw['gid'] ) )
             continue;
           var li = document.createElement("LI");
           var checkboxContainer = document.createElement("LABEL");
@@ -552,7 +549,7 @@ function enableSettingsModal(){
           checkbox.setAttribute("type", 'checkbox');
           var checkmark = document.createElement("SPAN");
           checkmark.setAttribute("class", "checkmark");
-          li.setAttribute("id", 'm-c-ws' + sw['id']);
+          li.setAttribute("id", 'm-c-ws' + sw['gid']);
           li.setAttribute("class", 'modal-list-item');
           checkboxContainer.appendChild(checkbox);
           checkboxContainer.appendChild(checkmark);
@@ -570,7 +567,7 @@ function enableSettingsModal(){
           checkbox.setAttribute("type", 'checkbox');
           var checkmark = document.createElement("SPAN");
           checkmark.setAttribute("class", "checkmark");
-          li.setAttribute("id", 'm-b-ws' + bw['id']);
+          li.setAttribute("id", 'm-b-ws' + bw['gid']);
           li.setAttribute("class", 'modal-list-item');
           checkboxContainer.appendChild(checkbox);
           checkboxContainer.appendChild(checkmark);
@@ -599,7 +596,7 @@ function enableSettingsModal(){
           var checkedWorkspace = label.innerText;
           child.getElementsByTagName("INPUT")[0].checked = false;
 
-          result.banned_workspaces.push({'name': checkedWorkspace, 'id': child.id.substring(6, child.id.length)});
+          result.banned_workspaces.push({'name': checkedWorkspace, 'gid': child.id.substring(6, child.id.length)});
 
           document.getElementById('m-cur-work-list').removeChild(child);
           $('#m-ban-work-list').append( child );
@@ -625,7 +622,7 @@ function enableSettingsModal(){
           child.getElementsByTagName("INPUT")[0].checked = false;
 
           // Unban this thing!
-          var index = result.banned_workspaces.findIndex(ws => ws.id == child.id.substring(6, child.id.length));
+          var index = result.banned_workspaces.findIndex(ws => ws.gid == child.id.substring(6, child.id.length));
           result.banned_workspaces.splice(index, 1);
 
           document.getElementById('m-ban-work-list').removeChild(child);

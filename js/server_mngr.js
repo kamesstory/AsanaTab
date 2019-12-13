@@ -68,7 +68,7 @@ ServerManager = {
     // We don't know what pot to view it in so we just use the task ID
     // and Asana will choose a suitable default.
     var options = Options.loadOptions();
-    var pot_id = task.id;
+    var pot_id = task.gid;
     var url = 'https://' + options.asana_host_port + '/0/' + pot_id + '/' + task.id;
     callback(url);
   },
@@ -222,7 +222,7 @@ ServerManager = {
 
   _updateUser: function(workspace_id, user) {
     this._known_users[workspace_id] = this._known_users[workspace_id] || {}
-    this._known_users[workspace_id][user.id] = user;
+    this._known_users[workspace_id][user.gid] = user;
     this._cacheUserPhoto(user);
   },
 
@@ -240,7 +240,7 @@ ServerManager = {
       sendNotification( 'AsanaError', notifOptions, function(){} );
     }
     if (response.errors) {
-      console.log( 'ERROR on _makeCallback of server_mngr.js' );
+      console.log( 'ERROR on _makeCallback of server_mngr.js', response.errors, response );
       (errback || this.onError).call(null, response);
     } else {
       printForUser( "SUCCESS on _MakeCallback of server_mngr.js" );
