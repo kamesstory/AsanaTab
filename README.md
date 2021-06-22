@@ -1,3 +1,6 @@
+NOTE: this codebase has been deprecated in favor of a `Typescript`-first implementation. However, I will continue monitoring and responding to the issues that are here.
+
+
 # asana tab
 Let's you quickly and easily view your Asana tasks in a fast and simple interface through your new tab page!
 
