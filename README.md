@@ -6,5 +6,4 @@ Let's you quickly and easily view your Asana tasks in a fast and simple interfac
 ## installation
 [Install this extension from the Chrome Web Store!](https://chrome.google.com/webstore/detail/asana-tab/ldfaccjdcphlaodakclpiomadaakoobd)
 
-Alternatively, you can test the files in here directly by going to `chrome://extensions` in Chrome, enabling Developer Mode, clicking "Load unpacked extension" and opening the project folder you cloned.
-
+Alternatively, you can build the project and test the files directly by going to `chrome://extensions` in Chrome, enabling Developer Mode, clicking `Load unpacked extension` and opening the dist folder.
