@@ -1,4 +1,4 @@
-# NOTE: this codebase has been deprecated in favor of a `Typescript`-first implementation. However, I will continue monitoring and responding to the issues that are here.
+# NOTE: this codebase has been deprecated. However, I will continue monitoring and responding to the issues that are here.
 
 
 ## asana tab
