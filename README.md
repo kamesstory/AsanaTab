@@ -1,4 +1,4 @@
-# NOTE: this codebase has been deprecated. However, I will continue monitoring and responding to the issues that are here.
+# NOTE: this codebase has been deprecated and AsanaTabs is being maintained in a separate repo. However, I will continue monitoring and responding to any product issues that are posted here.
 
 
 ## asana tab
